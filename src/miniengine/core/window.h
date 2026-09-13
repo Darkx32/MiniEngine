@@ -19,12 +19,17 @@ namespace MiniEngine
         ~Window();
 
         [[nodiscard]] bool windowShouldClose() const;
+        [[nodiscard]] int getWidth() const;
+        [[nodiscard]] int getHeight() const;
 
     private:
         friend class Engine;
 
         bool init();
         void shutdown();
+
+        [[nodiscard]] void* getNativeWindowHandle() const;
+        [[nodiscard]] void* getNativeDisplayType() const;
 
         SDL_Window *window;
         bool isRunning;
