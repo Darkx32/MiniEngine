@@ -8,8 +8,11 @@
 
 namespace MiniEngine
 {
-    bool initializeRender(void* nativeWindowHandle, void* nativeDisplayType, uint32_t width, uint32_t height);
-    void shutdownRender();
+    struct RenderStartup
+    {
+        static bool initializeRender(void* nativeWindowHandle, void* nativeDisplayType, uint32_t width, uint32_t height);
+        static void shutdownRender();
+    };
 } // MiniEngine
 
 #endif //MINIENGINE_RENDERSTARTUP_H
