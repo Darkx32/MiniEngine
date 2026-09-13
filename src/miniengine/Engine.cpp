@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include <spdlog/spdlog.h>
 
+#include "core/renderstartup.h"
 #include "SDL3/SDL_timer.h"
 
 namespace MiniEngine {
@@ -20,6 +21,13 @@ bool Engine::init(const std::string& title, const Vector2 size) {
     if (!window->init())
     {
         spdlog::error("Failed to start Window");
+        return false;
+    }
+
+    if (!RenderStartup::initializeRender(window->getNativeWindowHandle(), window->getNativeDisplayType(),
+            static_cast<uint32_t>(window->getWidth()), static_cast<uint32_t>(window->getHeight())))
+    {
+        spdlog::error("Failed to initialize render");
         return false;
     }
 
@@ -48,8 +56,10 @@ void Engine::run() {
 }
 
 void Engine::shutdown() {
-    delete window;
+    RenderStartup::shutdownRender();
+
     delete inputSystem;
+    delete window;
 
     spdlog::info("Miniengine finished successfully.");
 }
