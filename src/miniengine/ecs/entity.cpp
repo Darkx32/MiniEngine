@@ -30,7 +30,7 @@ namespace MiniEngine
     template <typename T>
     T& Entity::getComponent()
     {
-        assert(getComponent<T>() && "Entity does not have that component");
+        assert(hasComponent<T>() && "Entity does not have that component");
         return p_scene->registry->get<T>(m_entity);
     }
 
