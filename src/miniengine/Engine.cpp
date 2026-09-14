@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include <spdlog/spdlog.h>
 
+#include "bgfx/bgfx.h"
 #include "core/renderstartup.h"
 #include "SDL3/SDL_timer.h"
 
@@ -37,7 +38,7 @@ bool Engine::init(const std::string& title, const Vector2 size) {
         spdlog::error("Failed to start InputSystem");
         return false;
     }
-    inputSystem->eventWatchQuit(&window->isRunning);
+    inputSystem->eventWatchWindow(&window->windowSharedData);
 
     spdlog::info("Miniengine started successfully.");
     return true;
@@ -52,6 +53,14 @@ void Engine::run() {
 
         if (inputSystem->isKeyPressed(InputSystem::KeyCode::Escape))
             window->isRunning = false;
+
+        if (window->hasResized)
+        {
+            window->hasResized = false;
+            bgfx::setViewRect(0, 0, 0, window->width, window->height);
+        }
+
+        bgfx::touch(0);
     }
 }
 

@@ -9,7 +9,7 @@
 
 namespace MiniEngine
 {
-    Window::Window(const char* title, const Vector2 size) : window(nullptr), isRunning(false)
+    Window::Window(const char* title, const Vector2 size) : window(nullptr), windowSharedData(&isRunning, &hasResized), isRunning(false), hasResized(false)
     {
         this->title = title;
         this->width = static_cast<int>(size.x);

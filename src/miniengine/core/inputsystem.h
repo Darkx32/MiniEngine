@@ -7,6 +7,8 @@
 #include <bitset>
 #include <cstdint>
 
+#include "window.h"
+
 namespace MiniEngine
 {
     class InputSystem
@@ -50,7 +52,7 @@ namespace MiniEngine
             RightGui = 231
         };
 
-        InputSystem() : currentStateMouseButton(0), previousStateMouseButton(0), currentStateKeyBoard(0), previousStateKeyBoard(0), keys(nullptr), p_isRunning(nullptr) {}
+        InputSystem() : currentStateMouseButton(0), previousStateMouseButton(0), currentStateKeyBoard(0), previousStateKeyBoard(0), keys(nullptr), p_windowData(nullptr) {}
         ~InputSystem();
 
         [[nodiscard]] bool isKeyDown(KeyCode keyCode) const;
@@ -62,7 +64,7 @@ namespace MiniEngine
 
     private:
         friend class Engine;
-        void eventWatchQuit(bool* isRunning);
+        void eventWatchWindow(Window::WindowSharedData* windowData);
         void update();
         static uint8_t toButtonMask(MouseButton mouseButton);
 
@@ -72,7 +74,7 @@ namespace MiniEngine
         std::bitset<512> previousStateKeyBoard;
 
         const bool* keys;
-        bool* p_isRunning;
+        Window::WindowSharedData* p_windowData;
     };
 } // Miniaudio
 

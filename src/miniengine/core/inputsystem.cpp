@@ -9,14 +9,18 @@
 
 namespace MiniEngine
 {
-    static bool SDLCALL handleQuitEvents(void* userdata, SDL_Event* event)
+    static bool SDLCALL handleWindowEvents(void* windowdata, SDL_Event* event)
     {
-        auto* isRunning = static_cast<bool*>(userdata);
+        const auto* windowData = static_cast<Window::WindowSharedData*>(windowdata);
 
         if (event->type == SDL_EVENT_QUIT || event->type == SDL_EVENT_WINDOW_CLOSE_REQUESTED)
         {
-            *isRunning = false;
+            *windowData->isRunning = false;
             return false;
+        }
+        if (event->type == SDL_EVENT_WINDOW_RESIZED)
+        {
+            *windowData->hasResized = true;
         }
 
         return true;
@@ -24,8 +28,8 @@ namespace MiniEngine
 
     InputSystem::~InputSystem()
     {
-        if (p_isRunning)
-            SDL_RemoveEventWatch(handleQuitEvents, p_isRunning);
+        if (p_windowData)
+            SDL_RemoveEventWatch(handleWindowEvents, p_windowData);
     }
 
     bool InputSystem::isKeyDown(KeyCode keyCode) const
@@ -61,10 +65,10 @@ namespace MiniEngine
         return !(currentStateMouseButton & mask) && previousStateMouseButton & mask;
     }
 
-    void InputSystem::eventWatchQuit(bool* isRunning)
+    void InputSystem::eventWatchWindow(Window::WindowSharedData* windowData)
     {
-        SDL_AddEventWatch(handleQuitEvents, isRunning);
-        p_isRunning = isRunning;
+        SDL_AddEventWatch(handleWindowEvents, windowData);
+        p_windowData = windowData;
     }
 
     void InputSystem::update()
