@@ -7,13 +7,16 @@
 
 namespace MiniEngine {
 
-Engine::Engine() : window(nullptr), inputSystem(nullptr) {}
+Engine::Engine() : fps(60), window(nullptr), inputSystem(nullptr) {}
 
 Engine::~Engine() {
     shutdown();
 }
 
 bool Engine::init(const std::string& title, const Vector2 size) {
+    #ifndef NDEBUG
+    spdlog::set_level(spdlog::level::debug);
+    #endif
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
     spdlog::info("MiniEngine - Starting");
     spdlog::info("Starting miniengine...");
@@ -44,11 +47,18 @@ bool Engine::init(const std::string& title, const Vector2 size) {
     return true;
 }
 
+void Engine::setFps(const int newFps)
+{
+    this->fps = newFps;
+}
+
 void Engine::run() {
     spdlog::info("Starting main loop...");
 
     while (window->windowShouldClose())
     {
+        const uint64_t start_time = SDL_GetTicks();
+
         inputSystem->update();
 
         if (inputSystem->isKeyPressed(InputSystem::KeyCode::Escape))
@@ -61,6 +71,12 @@ void Engine::run() {
         }
 
         bgfx::touch(0);
+
+        const uint64_t frame_duration = SDL_GetTicks() - start_time;
+        if (const int FRAME_DELAY = 1000 / fps; frame_duration < FRAME_DELAY)
+        {
+            SDL_Delay(FRAME_DELAY - frame_duration);
+        }
     }
 }
 

@@ -11,10 +11,13 @@ public:
     ~Engine();
 
     bool init(const std::string& title, Vector2 size);
+    void setFps(int newFps);
     void run();
     void shutdown();
 
 private:
+    int fps;
+
     Window* window;
     InputSystem* inputSystem;
 };

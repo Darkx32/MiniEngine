@@ -32,7 +32,7 @@ namespace MiniEngine
                         msg.remove_suffix(1);
                     }
 
-                    spdlog::info("[BGFX][{}:{}] {}", _filePath, _line, msg);
+                    spdlog::debug("[BGFX][{}:{}] {}", _filePath, _line, msg);
                 }
             }
 
@@ -61,7 +61,7 @@ namespace MiniEngine
 
     static MiniEngineBGFXCallback bgfx_callback;
 
-    bool RenderStartup::initializeRender(void* nativeWindowHandle, void* nativeDisplayType, uint32_t width, uint32_t height)
+    bool RenderStartup::initializeRender(void* nativeWindowHandle, void* nativeDisplayType, const uint32_t width, const uint32_t height)
     {
         bgfx::Init init;
         init.type = bgfx::RendererType::Count;
@@ -71,7 +71,7 @@ namespace MiniEngine
         init.swapChain.ndt = nativeDisplayType;
         init.swapChain.width = width;
         init.swapChain.height = height;
-        init.reset = BGFX_RESET_VSYNC;
+        init.reset = BGFX_RESET_NONE;
 
         if (!bgfx::init(init))
         {
