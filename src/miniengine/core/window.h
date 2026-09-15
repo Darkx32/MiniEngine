@@ -18,12 +18,6 @@ namespace MiniEngine
         Window(const char* title, Vector2 size);
         ~Window();
 
-        struct WindowSharedData
-        {
-            bool* isRunning;
-            bool* hasResized;
-        };
-
         [[nodiscard]] bool windowShouldClose() const;
         [[nodiscard]] int getWidth() const;
         [[nodiscard]] int getHeight() const;
@@ -33,13 +27,13 @@ namespace MiniEngine
 
         bool init();
         void shutdown();
+        void pollEvents();
 
         [[nodiscard]] void* getNativeWindowHandle() const;
         [[nodiscard]] void* getNativeDisplayType() const;
 
         SDL_Window *window;
-        WindowSharedData windowSharedData;
-        bool isRunning;
+        bool isOpen;
         bool hasResized;
 
         std::string title;

@@ -17,9 +17,9 @@ public:
 
 private:
     int fps;
+    bool isRunning;
 
     Window* window;
-    InputSystem* inputSystem;
 };
 
 } // namespace miniengine

@@ -52,29 +52,20 @@ namespace MiniEngine
             RightGui = 231
         };
 
-        InputSystem() : currentStateMouseButton(0), previousStateMouseButton(0), currentStateKeyBoard(0), previousStateKeyBoard(0), keys(nullptr), p_windowData(nullptr) {}
-        ~InputSystem();
-
-        [[nodiscard]] bool isKeyDown(KeyCode keyCode) const;
-        [[nodiscard]] bool isKeyPressed(KeyCode keyCode) const;
-        [[nodiscard]] bool isKeyReleased(KeyCode keyCode) const;
-        [[nodiscard]] bool isMouseDown(MouseButton mouseButton) const;
-        [[nodiscard]] bool isMousePressed(MouseButton mouseButton) const;
-        [[nodiscard]] bool isMouseReleased(MouseButton mouseButton) const;
+        [[nodiscard]] static bool isKeyDown(KeyCode keyCode);
+        [[nodiscard]] static bool isKeyPressed(KeyCode keyCode);
+        [[nodiscard]] static bool isKeyReleased(KeyCode keyCode);
+        [[nodiscard]] static bool isMouseDown(MouseButton mouseButton);
+        [[nodiscard]] static bool isMousePressed(MouseButton mouseButton);
+        [[nodiscard]] static bool isMouseReleased(MouseButton mouseButton);
+        [[nodiscard]] static Vector2 getMousePosition();
 
     private:
         friend class Engine;
-        void eventWatchWindow(Window::WindowSharedData* windowData);
-        void update();
+        static void update();
         static uint8_t toButtonMask(MouseButton mouseButton);
 
-        uint8_t currentStateMouseButton;
-        uint8_t previousStateMouseButton;
-        std::bitset<512> currentStateKeyBoard;
-        std::bitset<512> previousStateKeyBoard;
-
-        const bool* keys;
-        Window::WindowSharedData* p_windowData;
+        static float mouseX, mouseY;
     };
 } // Miniaudio
 

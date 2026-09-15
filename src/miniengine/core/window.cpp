@@ -9,7 +9,7 @@
 
 namespace MiniEngine
 {
-    Window::Window(const char* title, const Vector2 size) : window(nullptr), windowSharedData(&isRunning, &hasResized), isRunning(false), hasResized(false)
+    Window::Window(const char* title, const Vector2 size) : window(nullptr), isOpen(false), hasResized(false)
     {
         this->title = title;
         this->width = static_cast<int>(size.x);
@@ -23,7 +23,7 @@ namespace MiniEngine
 
     bool Window::windowShouldClose() const
     {
-        return isRunning;
+        return isOpen;
     }
 
     int Window::getWidth() const
@@ -52,8 +52,8 @@ namespace MiniEngine
             return false;
         }
 
-        isRunning = true;
-        return true;
+        isOpen = true;
+        return isOpen;
     }
 
     void Window::shutdown()
@@ -65,6 +65,18 @@ namespace MiniEngine
         }
 
         SDL_Quit();
+    }
+
+    void Window::pollEvents()
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_EVENT_QUIT || event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED)
+                isOpen = false;
+            if (event.type == SDL_EVENT_WINDOW_RESIZED)
+                hasResized = true;
+        }
     }
 
     void* Window::getNativeWindowHandle() const

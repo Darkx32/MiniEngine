@@ -9,80 +9,74 @@
 
 namespace MiniEngine
 {
-    static bool SDLCALL handleWindowEvents(void* windowdata, SDL_Event* event)
-    {
-        const auto* windowData = static_cast<Window::WindowSharedData*>(windowdata);
+    static uint8_t currentStateMouseButton = 0;
+    static uint8_t previousStateMouseButton = 0;
+    static std::bitset<512> currentStateKeyBoard{0};
+    static std::bitset<512> previousStateKeyBoard{0};
+    float InputSystem::mouseX = 0;
+    float InputSystem::mouseY = 0;
 
-        if (event->type == SDL_EVENT_QUIT || event->type == SDL_EVENT_WINDOW_CLOSE_REQUESTED)
-        {
-            *windowData->isRunning = false;
-            return false;
-        }
-        if (event->type == SDL_EVENT_WINDOW_RESIZED)
-        {
-            *windowData->hasResized = true;
-        }
-
-        return true;
-    }
-
-    InputSystem::~InputSystem()
-    {
-        if (p_windowData)
-            SDL_RemoveEventWatch(handleWindowEvents, p_windowData);
-    }
-
-    bool InputSystem::isKeyDown(KeyCode keyCode) const
+    bool InputSystem::isKeyDown(KeyCode keyCode)
     {
         return currentStateKeyBoard.test(static_cast<size_t>(keyCode));
     }
 
-    bool InputSystem::isKeyPressed(KeyCode keyCode) const
+    bool InputSystem::isKeyPressed(KeyCode keyCode)
     {
-        return currentStateKeyBoard.test(static_cast<size_t>(keyCode)) && !previousStateKeyBoard.test(static_cast<size_t>(keyCode));
+        const auto idx = static_cast<size_t>(keyCode);
+        return currentStateKeyBoard.test(idx) && !previousStateKeyBoard.test(idx);
     }
 
-    bool InputSystem::isKeyReleased(KeyCode keyCode) const
+    bool InputSystem::isKeyReleased(KeyCode keyCode)
     {
-        return !currentStateKeyBoard.test(static_cast<size_t>(keyCode)) && previousStateKeyBoard.test(static_cast<size_t>(keyCode));
+        const auto idx = static_cast<size_t>(keyCode);
+        return !currentStateKeyBoard.test(idx) && previousStateKeyBoard.test(idx);
     }
 
-    bool InputSystem::isMouseDown(const MouseButton mouseButton) const
+    bool InputSystem::isMouseDown(const MouseButton mouseButton)
     {
         const uint8_t mask = toButtonMask(mouseButton);
         return (currentStateMouseButton & mask) != 0;
     }
 
-    bool InputSystem::isMousePressed(const MouseButton mouseButton) const
+    bool InputSystem::isMousePressed(const MouseButton mouseButton)
     {
         const uint8_t mask = toButtonMask(mouseButton);
         return currentStateMouseButton & mask && !(previousStateMouseButton & mask);
     }
 
-    bool InputSystem::isMouseReleased(const MouseButton mouseButton) const
+    bool InputSystem::isMouseReleased(const MouseButton mouseButton)
     {
         const uint8_t mask = toButtonMask(mouseButton);
         return !(currentStateMouseButton & mask) && previousStateMouseButton & mask;
     }
 
-    void InputSystem::eventWatchWindow(Window::WindowSharedData* windowData)
+    Vector2 InputSystem::getMousePosition()
     {
-        SDL_AddEventWatch(handleWindowEvents, windowData);
-        p_windowData = windowData;
+        return {mouseX, mouseY};
     }
 
     void InputSystem::update()
     {
-        SDL_PumpEvents();
+        previousStateMouseButton = currentStateMouseButton;
         previousStateKeyBoard = currentStateKeyBoard;
 
-        int numKeys = 0;
-        keys = SDL_GetKeyboardState(&numKeys);
+        SDL_PumpEvents();
 
-        for (std::size_t i = 0; i < numKeys; i++)
+        int numKeys = 0;
+        const bool* keys = SDL_GetKeyboardState(&numKeys);
+
+        if (keys != nullptr)
         {
-            currentStateKeyBoard.set(i, keys[i]);
+            const size_t maxKeys = std::min(static_cast<size_t>(numKeys), currentStateKeyBoard.size());
+            currentStateKeyBoard.reset(0);
+
+            for (std::size_t i = 0; i < maxKeys; i++)
+            {
+                currentStateKeyBoard.set(i, keys[i]);
+            }
         }
+        currentStateMouseButton = SDL_GetMouseState(&mouseX, &mouseY);
     }
 
     uint8_t InputSystem::toButtonMask(MouseButton mouseButton)

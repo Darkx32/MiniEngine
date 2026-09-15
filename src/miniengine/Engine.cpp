@@ -7,7 +7,7 @@
 
 namespace MiniEngine {
 
-Engine::Engine() : fps(60), window(nullptr), inputSystem(nullptr) {}
+Engine::Engine() : fps(60), isRunning(false), window(nullptr) {}
 
 Engine::~Engine() {
     shutdown();
@@ -35,16 +35,9 @@ bool Engine::init(const std::string& title, const Vector2 size) {
         return false;
     }
 
-    inputSystem = new InputSystem();
-    if (!inputSystem)
-    {
-        spdlog::error("Failed to start InputSystem");
-        return false;
-    }
-    inputSystem->eventWatchWindow(&window->windowSharedData);
-
     spdlog::info("Miniengine started successfully.");
-    return true;
+    isRunning = true;
+    return isRunning;
 }
 
 void Engine::setFps(const int newFps)
@@ -55,14 +48,15 @@ void Engine::setFps(const int newFps)
 void Engine::run() {
     spdlog::info("Starting main loop...");
 
-    while (window->windowShouldClose())
+    while (isRunning)
     {
         const uint64_t start_time = SDL_GetTicks();
 
-        inputSystem->update();
+        InputSystem::update();
+        window->pollEvents();
 
-        if (inputSystem->isKeyPressed(InputSystem::KeyCode::Escape))
-            window->isRunning = false;
+        if (!window->windowShouldClose() || InputSystem::isKeyPressed(InputSystem::KeyCode::Escape))
+            isRunning = false;
 
         if (window->hasResized)
         {
@@ -83,7 +77,6 @@ void Engine::run() {
 void Engine::shutdown() {
     RenderStartup::shutdownRender();
 
-    delete inputSystem;
     delete window;
 
     spdlog::info("Miniengine finished successfully.");
