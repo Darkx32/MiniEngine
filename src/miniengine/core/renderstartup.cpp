@@ -7,6 +7,8 @@
 #include <bgfx/bgfx.h>
 #include <spdlog/spdlog.h>
 
+#include "graphics.h"
+
 namespace MiniEngine
 {
     namespace
@@ -79,8 +81,7 @@ namespace MiniEngine
             return false;
         }
 
-        bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
-        bgfx::setViewRect(0, 0, 0, static_cast<uint16_t>(width), static_cast<uint16_t>(height));
+        bgfx::setViewRect(MiniEngine::BgfxIdRender::DEFAULT, 0, 0, static_cast<uint16_t>(width), static_cast<uint16_t>(height));
 
         return true;
     }

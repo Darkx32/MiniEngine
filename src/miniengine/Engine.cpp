@@ -2,6 +2,7 @@
 #include <spdlog/spdlog.h>
 
 #include "bgfx/bgfx.h"
+#include "core/graphics.h"
 #include "core/renderstartup.h"
 #include "SDL3/SDL_timer.h"
 
@@ -55,16 +56,19 @@ void Engine::run() {
         InputSystem::update();
         window->pollEvents();
 
-        if (!window->windowShouldClose() || InputSystem::isKeyPressed(InputSystem::KeyCode::Escape))
+        if (window->windowShouldClose() || InputSystem::isKeyPressed(InputSystem::KeyCode::Escape))
             isRunning = false;
 
         if (window->hasResized)
         {
             window->hasResized = false;
-            bgfx::setViewRect(0, 0, 0, window->width, window->height);
+            bgfx::setViewRect(DEFAULT, 0, 0, window->width, window->height);
         }
 
-        bgfx::touch(0);
+        bgfx::setViewClear(DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
+        bgfx::touch(DEFAULT);
+
+        bgfx::frame();
 
         const uint64_t frame_duration = SDL_GetTicks() - start_time;
         if (const int FRAME_DELAY = 1000 / fps; frame_duration < FRAME_DELAY)

@@ -23,7 +23,7 @@ namespace MiniEngine
 
     bool Window::windowShouldClose() const
     {
-        return isOpen;
+        return !isOpen;
     }
 
     int Window::getWidth() const
