@@ -1,25 +1,28 @@
 #pragma once
 #include <string>
 
-#include "core/inputsystem.h"
 #include "core/window.h"
 
 namespace MiniEngine {
-class Engine {
-public:
-    Engine();
-    ~Engine();
+    class Scene;
 
-    bool init(const std::string& title, Vector2 size);
-    void setFps(int newFps);
-    void run();
-    void shutdown();
+    class Engine {
+    public:
+        Engine();
+        ~Engine();
 
-private:
-    int fps;
-    bool isRunning;
+        bool init(const std::string& title, Vector2 size);
+        void setScene(Scene* newScene);
+        void setFps(int newFps);
+        void run();
+        void shutdown() const;
 
-    Window* window;
-};
+    private:
+        int fps;
+        bool isRunning;
+        Scene* scene;
+
+        Window* window;
+    };
 
 } // namespace miniengine

@@ -20,8 +20,4 @@ namespace MiniEngine
         const entt::entity entity = registry->create();
         return Entity(entity, this);
     }
-
-    void Scene::update()
-    {
-    }
 } // MiniEngine

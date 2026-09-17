@@ -23,9 +23,6 @@ namespace MiniEngine
         friend class Engine;
         friend class Entity;
         entt::registry* registry;
-
-        void update();
-        void render();
     };
 } // MiniEngine
 

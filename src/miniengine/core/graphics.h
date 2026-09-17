@@ -8,19 +8,38 @@
 
 namespace MiniEngine
 {
-    enum BgfxIdRender
+    struct Mesh
     {
-        DEFAULT,
-        UI
+        uint16_t vbh = 0xFFFF;
+        uint16_t ibh = 0xFFFF;
+        uint16_t program = 0xFFFF;
+
+        uint16_t uColor = 0xFFFF;
+    };
+
+    struct CubeMesh : Mesh
+    {
+        static CubeMesh init();
     };
 
     class Graphics
     {
     public:
+        enum BgfxIdRender
+        {
+            DEFAULT,
+            UI
+        };
+
         static void setClearColor(uint32_t newColor);
+
+        static CubeMesh primitiveCube;
 
     private:
         friend class Engine;
+        static void initializePrograms();
+        static void shutdownPrograms();
+
         static uint32_t color;
     };
 } // MiniAudio

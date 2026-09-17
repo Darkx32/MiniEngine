@@ -13,6 +13,8 @@ namespace MiniEngine
     {
         m_entity = entity;
         p_scene = scene;
+
+        addComponent<Transform>();
     }
 
     template <typename T, typename ... Args>

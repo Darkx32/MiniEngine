@@ -2,13 +2,19 @@
 #include <spdlog/spdlog.h>
 
 #include "bgfx/bgfx.h"
+#include "bx/math.h"
 #include "core/graphics.h"
+#include "core/inputsystem.h"
 #include "core/renderstartup.h"
+#include "core/scene.h"
+#include "ecs/rendersystem.h"
 #include "SDL3/SDL_timer.h"
 
 namespace MiniEngine {
 
-Engine::Engine() : fps(60), isRunning(false), window(nullptr) {}
+Engine::Engine() : fps(60), isRunning(false), scene(nullptr), window(nullptr)
+{
+}
 
 Engine::~Engine() {
     shutdown();
@@ -36,9 +42,16 @@ bool Engine::init(const std::string& title, const Vector2 size) {
         return false;
     }
 
+    Graphics::initializePrograms();
+
     spdlog::info("Miniengine started successfully.");
     isRunning = true;
     return isRunning;
+}
+
+void Engine::setScene(Scene* newScene)
+{
+    scene = newScene;
 }
 
 void Engine::setFps(const int newFps)
@@ -49,6 +62,10 @@ void Engine::setFps(const int newFps)
 void Engine::run() {
     spdlog::info("Starting main loop...");
 
+    float view[16];
+    float proj[16];
+    bx::mtxOrtho(proj, 0.0f, static_cast<float>(window->width), static_cast<float>(window->height),
+    0.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
     while (isRunning)
     {
         const uint64_t start_time = SDL_GetTicks();
@@ -62,11 +79,19 @@ void Engine::run() {
         if (window->hasResized)
         {
             window->hasResized = false;
-            bgfx::setViewRect(DEFAULT, 0, 0, window->width, window->height);
+            bgfx::setViewRect(Graphics::DEFAULT, 0, 0, window->width, window->height);
+            bx::mtxOrtho(proj, 0.0f, static_cast<float>(window->width), static_cast<float>(window->height),
+            0.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
         }
 
-        bgfx::setViewClear(DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
-        bgfx::touch(DEFAULT);
+        bgfx::setViewClear(Graphics::DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
+        bgfx::touch(Graphics::DEFAULT);
+
+        bx::mtxIdentity(view);
+        bgfx::setViewTransform(Graphics::DEFAULT, view, proj);
+
+        if (scene)
+            RenderSystem::render(scene->registry);
 
         bgfx::frame();
 
@@ -78,7 +103,9 @@ void Engine::run() {
     }
 }
 
-void Engine::shutdown() {
+void Engine::shutdown() const
+{
+    Graphics::shutdownPrograms();
     RenderStartup::shutdownRender();
 
     delete window;

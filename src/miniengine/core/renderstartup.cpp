@@ -81,7 +81,7 @@ namespace MiniEngine
             return false;
         }
 
-        bgfx::setViewRect(MiniEngine::BgfxIdRender::DEFAULT, 0, 0, static_cast<uint16_t>(width), static_cast<uint16_t>(height));
+        bgfx::setViewRect(Graphics::DEFAULT, 0, 0, static_cast<uint16_t>(width), static_cast<uint16_t>(height));
 
         return true;
     }
