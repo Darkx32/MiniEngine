@@ -5,14 +5,12 @@
 #ifndef MINIENGINE_ENTITY_H
 #define MINIENGINE_ENTITY_H
 
-#include <entt/fwd.hpp>
-
+#include "entt/entt.hpp"
+#include "miniengine/core/scene.h"
 #include "miniengine/math/vector3.h"
 
 namespace MiniEngine
 {
-    class Scene;
-
     struct Transform
     {
         Vector3 position;
@@ -28,17 +26,30 @@ namespace MiniEngine
     public:
         Entity() = default;
 
-        template<typename T, typename... Args>
-        T& addComponent(Args&&... args);
+        template <typename T, typename ... Args>
+        T& addComponent(Args&&... args)
+        {
+            return p_scene->registry->emplace<T>(m_entity, std::forward<Args>(args)...);
+        }
 
-        template<typename T>
-        void removeComponent() const;
+        template <typename T>
+        void removeComponent() const
+        {
+            p_scene->registry->remove<T>(m_entity);
+        }
 
-        template<typename T>
-        T& getComponent();
+        template <typename T>
+        T& getComponent()
+        {
+            assert(hasComponent<T>() && "Entity does not have that component");
+            return p_scene->registry->get<T>(m_entity);
+        }
 
-        template<typename T>
-        [[nodiscard]] bool hasComponent() const;
+        template <typename T>
+        [[nodiscard]] bool hasComponent() const
+        {
+            return p_scene->registry->all_of<T>(m_entity);
+        }
 
     private:
         friend class Scene;

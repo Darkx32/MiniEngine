@@ -73,7 +73,31 @@ namespace MiniEngine
         }
     }
 
-    CubeMesh CubeMesh::init()
+    void Mesh::destroy()
+    {
+        if (bgfx::isValid(bgfx::VertexBufferHandle{vbh}))
+        {
+            bgfx::destroy(bgfx::VertexBufferHandle{vbh});
+            vbh = BGFX_INVALID_HANDLE;
+        }
+        if (bgfx::isValid(bgfx::IndexBufferHandle{ibh}))
+        {
+            bgfx::destroy(bgfx::IndexBufferHandle{ibh});
+            ibh = BGFX_INVALID_HANDLE;
+        }
+        if (bgfx::isValid(bgfx::ProgramHandle{program}))
+        {
+            bgfx::destroy(bgfx::ProgramHandle{program});
+            program = BGFX_INVALID_HANDLE;
+        }
+        if (bgfx::isValid(bgfx::UniformHandle{uColor}))
+        {
+            bgfx::destroy(bgfx::UniformHandle{uColor});
+            uColor = BGFX_INVALID_HANDLE;
+        }
+    }
+
+    QuadMesh QuadMesh::init()
     {
         static PosColorVertex s_vertices[] = {
             {.vector3 = {-0.5f,  0.5f, 0.0f} },
@@ -127,18 +151,14 @@ namespace MiniEngine
     void Graphics::initializePrograms()
     {
         PosColorVertex::init();
-        primitiveCube = CubeMesh::init();
+        primitiveCube = QuadMesh::init();
     }
 
-    void Graphics::shutdownPrograms()
+    void Graphics::destroyPrograms()
     {
-        // QuadPrimitive
-        bgfx::destroy(bgfx::VertexBufferHandle{primitiveCube.vbh});
-        bgfx::destroy(bgfx::IndexBufferHandle{primitiveCube.ibh});
-        bgfx::destroy(bgfx::ProgramHandle{primitiveCube.program});
-        bgfx::destroy(bgfx::UniformHandle{primitiveCube.uColor});
+        primitiveCube.destroy();
     }
 
     uint32_t Graphics::color = 0x000000FF;
-    CubeMesh Graphics::primitiveCube = {};
+    QuadMesh Graphics::primitiveCube = {};
 } // MiniAudio

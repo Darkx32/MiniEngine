@@ -25,12 +25,10 @@ namespace MiniEngine
                 const bgfx::ProgramHandle program = {mesh.meshData->program};
                 const bgfx::UniformHandle color = {mesh.meshData->uColor};
 
-                if (!bgfx::isValid(vbh) || !bgfx::isValid(ibh) || !bgfx::isValid(program) || !bgfx::isValid(color)) return;
-
                 bx::mtxSRT(model,
-                    transform.scale.x, transform.scale.y, transform.scale.z,
-                    transform.rotation.x, transform.rotation.y, transform.rotation.z,
-                    transform.position.x, transform.position.y, transform.position.z);
+                transform.scale.x, transform.scale.y, transform.scale.z,
+                transform.rotation.x, transform.rotation.y, transform.rotation.z,
+                transform.position.x, transform.position.y, transform.position.z);
 
                 bgfx::setTransform(model);
 

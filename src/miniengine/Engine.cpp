@@ -84,11 +84,10 @@ void Engine::run() {
             0.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
         }
 
-        bgfx::setViewClear(Graphics::DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
-        bgfx::touch(Graphics::DEFAULT);
-
         bx::mtxIdentity(view);
         bgfx::setViewTransform(Graphics::DEFAULT, view, proj);
+        bgfx::setViewClear(Graphics::DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
+        bgfx::touch(Graphics::DEFAULT);
 
         if (scene)
             RenderSystem::render(scene->registry);
@@ -105,7 +104,7 @@ void Engine::run() {
 
 void Engine::shutdown() const
 {
-    Graphics::shutdownPrograms();
+    Graphics::destroyPrograms();
     RenderStartup::shutdownRender();
 
     delete window;
