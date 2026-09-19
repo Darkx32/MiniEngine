@@ -11,6 +11,29 @@
 
 namespace MiniEngine
 {
+    class IScript
+    {
+    public:
+        virtual ~IScript() = default;
+        virtual void startup() = 0;
+        virtual void update(float dt) = 0;
+
+        Entity* entity = nullptr;
+    };
+
+    struct ScriptComponent
+    {
+        std::vector<std::unique_ptr<IScript>> scripts;
+
+        ScriptComponent() = default;
+
+        ScriptComponent(const ScriptComponent&) = delete;
+        ScriptComponent& operator=(const ScriptComponent&) = delete;
+
+        ScriptComponent(ScriptComponent&&) noexcept = default;
+        ScriptComponent& operator=(ScriptComponent&&) noexcept = default;
+    };
+
     struct Transform
     {
         Vector3 position;
@@ -26,9 +49,19 @@ namespace MiniEngine
     public:
         Entity() = default;
 
-        template <typename T, typename ... Args>
+        void addScript(std::unique_ptr<IScript> script)
+        {
+            script->entity = this;
+            auto& [scripts] = getComponent<ScriptComponent>();
+            scripts.emplace_back(
+                std::move(script)
+            );
+        }
+
+        template <typename T, typename... Args>
         T& addComponent(Args&&... args)
         {
+            static_assert(!std::is_base_of_v<IScript, T>, "Scripts must be added using addScript()");
             return p_scene->registry->emplace<T>(m_entity, std::forward<Args>(args)...);
         }
 

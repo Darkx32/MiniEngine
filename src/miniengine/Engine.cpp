@@ -8,6 +8,7 @@
 #include "core/resourcemanager.h"
 #include "core/scene.h"
 #include "ecs/rendersystem.h"
+#include "ecs/scriptsystem.h"
 #include "SDL3/SDL_timer.h"
 
 namespace MiniEngine {
@@ -71,9 +72,21 @@ void Engine::run() {
     float proj[16];
     bx::mtxOrtho(proj, 0.0f, static_cast<float>(window->width), static_cast<float>(window->height),
     0.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
+
+    if (scene)
+    {
+        spdlog::info("Startup IScripts");
+        ScriptSystem::startup(scene->registry);
+    }
+    uint64_t lastTime = SDL_GetPerformanceCounter();
     while (isRunning)
     {
-        const uint64_t start_time = SDL_GetTicks();
+        const uint64_t currentTime = SDL_GetPerformanceCounter();
+
+        const auto dt = static_cast<float>(
+           static_cast<double>(currentTime - lastTime) /
+           static_cast<double>(SDL_GetPerformanceFrequency())
+       );
 
         InputSystem::update();
         window->pollEvents();
@@ -89,6 +102,10 @@ void Engine::run() {
             0.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
         }
 
+        if (scene)
+            ScriptSystem::update(scene->registry, dt);
+        lastTime = currentTime;
+
         bx::mtxIdentity(view);
         bgfx::setViewTransform(Graphics::DEFAULT, view, proj);
         bgfx::setViewClear(Graphics::DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
@@ -99,10 +116,11 @@ void Engine::run() {
 
         bgfx::frame();
 
-        const uint64_t frame_duration = SDL_GetTicks() - start_time;
-        if (const int FRAME_DELAY = 1000 / fps; frame_duration < FRAME_DELAY)
-        {
-            SDL_Delay(FRAME_DELAY - frame_duration);
+        const double frameTime = (static_cast<double>(SDL_GetPerformanceCounter()) -
+                static_cast<double>(currentTime)) / static_cast<double>(SDL_GetPerformanceFrequency());
+
+        if (const double targetFrameTime = 1.0 / fps; frameTime < targetFrameTime) {
+            SDL_Delay(static_cast<uint32_t>(targetFrameTime - frameTime) * 1000);
         }
     }
 }

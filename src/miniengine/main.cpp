@@ -4,6 +4,21 @@
 #include "ecs/entity.h"
 #include "ecs/renderer.h"
 
+class Player : public MiniEngine::IScript
+{
+public:
+    void startup() override
+    {
+        auto& transform = entity->getComponent<MiniEngine::Transform>();
+        transform.position = {20, 20, 1.0};
+        transform.scale = {100, 100, 1};
+    }
+    void update(float dt) override
+    {
+
+    }
+};
+
 int main() {
     MiniEngine::Graphics::setClearColor(0x40afffFF);
     MiniEngine::Engine engine;
@@ -17,9 +32,7 @@ int main() {
     auto& resourceManager = engine.getResourceManager();
     entity.addComponent<MiniEngine::MeshRenderer>(resourceManager.get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
 
-    auto& transform = entity.getComponent<MiniEngine::Transform>();
-    transform.position = {20, 20, 1.0};
-    transform.scale = {100, 100, 1};
+    entity.addScript(std::make_unique<Player>());
 
     engine.setScene(&scene);
 

@@ -12,5 +12,6 @@ namespace MiniEngine
         p_scene = scene;
 
         addComponent<Transform>();
+        addComponent<ScriptComponent>();
     }
 } // MiniEngine
