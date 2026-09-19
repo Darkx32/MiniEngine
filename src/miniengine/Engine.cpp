@@ -34,9 +34,9 @@ bool Engine::init(const std::string& title, const Vector2 size) {
         spdlog::error("Failed to start Window");
         return false;
     }
-    resourceManager = new ResourceManager();
+    resourceManager = std::make_unique<ResourceManager>();
 
-    if (!Graphics::initializePrograms({.resourceManager = resourceManager, .nativeWindowHandle = window->getNativeWindowHandle(),
+    if (!Graphics::initializePrograms({.resourceManager = resourceManager.get(), .nativeWindowHandle = window->getNativeWindowHandle(),
             .nativeDisplayType = window->getNativeDisplayType(),
             .width = static_cast<uint32_t>(window->getWidth()), .height = static_cast<uint32_t>(window->getHeight())}))
     {
@@ -59,9 +59,9 @@ void Engine::setFps(const int newFps)
     this->fps = newFps;
 }
 
-ResourceManager* Engine::getResourceManager() const
+ResourceManager& Engine::getResourceManager() const
 {
-    return this->resourceManager;
+    return *this->resourceManager;
 }
 
 void Engine::run() {
@@ -109,7 +109,7 @@ void Engine::run() {
 
 void Engine::shutdown() const
 {
-    delete resourceManager;
+    resourceManager->clean();
     Graphics::shutdown();
 
     delete window;

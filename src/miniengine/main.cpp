@@ -14,8 +14,8 @@ int main() {
 
     MiniEngine::Scene scene;
     auto entity = scene.createEntity();
-    const auto resourceManager = engine.getResourceManager();
-    entity.addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
+    auto& resourceManager = engine.getResourceManager();
+    entity.addComponent<MiniEngine::MeshRenderer>(resourceManager.get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
 
     auto& transform = entity.getComponent<MiniEngine::Transform>();
     transform.position = {20, 20, 1.0};
