@@ -4,14 +4,29 @@
 
 #ifndef MINIENGINE_RENDER_H
 #define MINIENGINE_RENDER_H
-#include "miniengine/core/graphics.h"
+#include "miniengine/core/resourcemanager.h"
 
 namespace MiniEngine
 {
+    struct MeshData
+    {
+        uint16_t vbh_idx = 0xFFFF;
+        uint16_t ibh_idx = 0xFFFF;
+        uint16_t program_idx = 0xFFFF;
+
+        uint16_t ucolor_idx= 0xFFFF;
+    };
+
+    struct QuadPrimitive : IResource, MeshData
+    {
+        QuadPrimitive();
+        ~QuadPrimitive() override;
+    };
+
     struct MeshRenderer
     {
-        explicit MeshRenderer(const Mesh* mesh) : meshData(mesh) {}
-        const Mesh* meshData{nullptr};
+        explicit MeshRenderer(const MeshData* mesh) : meshData(mesh) {}
+        const MeshData* meshData{nullptr};
     };
 }
 

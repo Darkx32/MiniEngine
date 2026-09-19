@@ -6,13 +6,14 @@
 #include "core/graphics.h"
 #include "core/inputsystem.h"
 #include "core/renderstartup.h"
+#include "core/resourcemanager.h"
 #include "core/scene.h"
 #include "ecs/rendersystem.h"
 #include "SDL3/SDL_timer.h"
 
 namespace MiniEngine {
 
-Engine::Engine() : fps(60), isRunning(false), scene(nullptr), window(nullptr)
+Engine::Engine() : fps(60), isRunning(false), resourceManager(nullptr), scene(nullptr), window(nullptr)
 {
 }
 
@@ -42,7 +43,8 @@ bool Engine::init(const std::string& title, const Vector2 size) {
         return false;
     }
 
-    Graphics::initializePrograms();
+    resourceManager = new ResourceManager();
+    Graphics::initializePrograms(this);
 
     spdlog::info("Miniengine started successfully.");
     isRunning = true;
@@ -57,6 +59,11 @@ void Engine::setScene(Scene* newScene)
 void Engine::setFps(const int newFps)
 {
     this->fps = newFps;
+}
+
+ResourceManager* Engine::getResourceManager() const
+{
+    return this->resourceManager;
 }
 
 void Engine::run() {
@@ -104,7 +111,7 @@ void Engine::run() {
 
 void Engine::shutdown() const
 {
-    Graphics::destroyPrograms();
+    delete resourceManager;
     RenderStartup::shutdownRender();
 
     delete window;

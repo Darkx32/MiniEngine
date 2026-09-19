@@ -8,21 +8,7 @@
 
 namespace MiniEngine
 {
-    struct Mesh
-    {
-        uint16_t vbh = 0xFFFF;
-        uint16_t ibh = 0xFFFF;
-        uint16_t program = 0xFFFF;
-
-        uint16_t uColor = 0xFFFF;
-
-        void destroy();
-    };
-
-    struct QuadMesh : Mesh
-    {
-        static QuadMesh init();
-    };
+    class Engine;
 
     class Graphics
     {
@@ -35,12 +21,12 @@ namespace MiniEngine
 
         static void setClearColor(uint32_t newColor);
 
-        static QuadMesh primitiveCube;
+        static uint16_t QuadPrimitiveID;
 
     private:
         friend class Engine;
-        static void initializePrograms();
-        static void destroyPrograms();
+        static void initializePrograms(const Engine* engine);
+        static void rendererComponentInit();
 
         static uint32_t color;
     };

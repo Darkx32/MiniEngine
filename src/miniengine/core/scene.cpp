@@ -3,7 +3,6 @@
 //
 
 #include "scene.h"
-#include <entt/entt.hpp>
 #include "miniengine/ecs/entity.h"
 
 namespace MiniEngine

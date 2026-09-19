@@ -9,6 +9,7 @@
 #include "bgfx/bgfx.h"
 #include "bx/math.h"
 #include "entt/entt.hpp"
+#include "miniengine/core/graphics.h"
 
 namespace MiniEngine
 {
@@ -20,10 +21,10 @@ namespace MiniEngine
         registry->view<const Transform, const MeshRenderer>().each(
             [&model, &white](entt::entity _, const Transform& transform, const MeshRenderer& mesh)
             {
-                const bgfx::VertexBufferHandle vbh = {mesh.meshData->vbh};
-                const bgfx::IndexBufferHandle ibh = {mesh.meshData->ibh};
-                const bgfx::ProgramHandle program = {mesh.meshData->program};
-                const bgfx::UniformHandle color = {mesh.meshData->uColor};
+                const bgfx::VertexBufferHandle vbh = {mesh.meshData->vbh_idx};
+                const bgfx::IndexBufferHandle ibh = {mesh.meshData->ibh_idx};
+                const bgfx::ProgramHandle program = {mesh.meshData->program_idx};
+                const bgfx::UniformHandle color = {mesh.meshData->ucolor_idx};
 
                 bx::mtxSRT(model,
                 transform.scale.x, transform.scale.y, transform.scale.z,
