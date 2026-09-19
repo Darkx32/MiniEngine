@@ -8,6 +8,7 @@
 
 namespace MiniEngine
 {
+    class ResourceManager;
     class Engine;
 
     class Graphics
@@ -25,7 +26,16 @@ namespace MiniEngine
 
     private:
         friend class Engine;
-        static void initializePrograms(const Engine* engine);
+        struct InitData
+        {
+            ResourceManager* resourceManager;
+            void* nativeWindowHandle;
+            void* nativeDisplayType;
+            const uint32_t width;
+            const uint32_t height;
+        };
+        static bool initializePrograms(const InitData& initData);
+        static void shutdown();
         static void rendererComponentInit();
 
         static uint32_t color;

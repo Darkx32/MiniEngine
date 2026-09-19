@@ -5,7 +5,6 @@
 #include "bx/math.h"
 #include "core/graphics.h"
 #include "core/inputsystem.h"
-#include "core/renderstartup.h"
 #include "core/resourcemanager.h"
 #include "core/scene.h"
 #include "ecs/rendersystem.h"
@@ -35,16 +34,15 @@ bool Engine::init(const std::string& title, const Vector2 size) {
         spdlog::error("Failed to start Window");
         return false;
     }
+    resourceManager = new ResourceManager();
 
-    if (!RenderStartup::initializeRender(window->getNativeWindowHandle(), window->getNativeDisplayType(),
-            static_cast<uint32_t>(window->getWidth()), static_cast<uint32_t>(window->getHeight())))
+    if (!Graphics::initializePrograms({.resourceManager = resourceManager, .nativeWindowHandle = window->getNativeWindowHandle(),
+            .nativeDisplayType = window->getNativeDisplayType(),
+            .width = static_cast<uint32_t>(window->getWidth()), .height = static_cast<uint32_t>(window->getHeight())}))
     {
-        spdlog::error("Failed to initialize render");
+        spdlog::error("Failed to initialize Graphics");
         return false;
     }
-
-    resourceManager = new ResourceManager();
-    Graphics::initializePrograms(this);
 
     spdlog::info("Miniengine started successfully.");
     isRunning = true;
@@ -112,7 +110,7 @@ void Engine::run() {
 void Engine::shutdown() const
 {
     delete resourceManager;
-    RenderStartup::shutdownRender();
+    Graphics::shutdown();
 
     delete window;
 
