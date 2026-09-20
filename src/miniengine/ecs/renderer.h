@@ -8,6 +8,9 @@
 
 namespace MiniEngine
 {
+    struct Transform;
+    struct Vector2;
+
     struct MeshData
     {
         uint16_t vbh_idx = 0xFFFF;
@@ -21,6 +24,17 @@ namespace MiniEngine
     {
         QuadPrimitive();
         ~QuadPrimitive() override;
+    };
+
+    struct Camera2D
+    {
+        float zoom = 1.0f;
+
+        float view[16]{};
+        float proj[16]{};
+
+        void calculate(const Vector2& windowSize);
+        void updateView(const Transform& transform);
     };
 
     struct MeshRenderer

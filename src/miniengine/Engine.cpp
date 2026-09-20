@@ -68,15 +68,12 @@ ResourceManager& Engine::getResourceManager() const
 void Engine::run() {
     spdlog::info("Starting main loop...");
 
-    float view[16];
-    float proj[16];
-    bx::mtxOrtho(proj, 0.0f, static_cast<float>(window->width), static_cast<float>(window->height),
-    0.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
-
     if (scene)
     {
-        spdlog::info("Startup IScripts");
+        spdlog::info("Startup components...");
         ScriptSystem::startup(scene->registry);
+        RenderSystem::calculate(scene->registry,
+    {static_cast<float>(window->width), static_cast<float>(window->height)});
     }
     uint64_t lastTime = SDL_GetPerformanceCounter();
     while (isRunning)
@@ -98,18 +95,16 @@ void Engine::run() {
         {
             window->hasResized = false;
             bgfx::setViewRect(Graphics::DEFAULT, 0, 0, window->width, window->height);
-            bx::mtxOrtho(proj, 0.0f, static_cast<float>(window->width), static_cast<float>(window->height),
-            0.0f, 0.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
+            if (scene)
+                RenderSystem::calculate(scene->registry,
+        {static_cast<float>(window->width), static_cast<float>(window->height)});
         }
 
         if (scene)
             ScriptSystem::update(scene->registry, dt);
         lastTime = currentTime;
 
-        bx::mtxIdentity(view);
-        bgfx::setViewTransform(Graphics::DEFAULT, view, proj);
         bgfx::setViewClear(Graphics::DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
-        bgfx::touch(Graphics::DEFAULT);
 
         if (scene)
             RenderSystem::render(scene->registry);

@@ -13,13 +13,40 @@
 
 namespace MiniEngine
 {
+    float RenderSystem::model[16] = {};
+
+    void RenderSystem::calculate(entt::registry* registry, const Vector2& windowSize)
+    {
+        if (const auto registryView = registry->view<Transform, Camera2D>(); registryView.begin() != registryView.end())
+        {
+            const auto entity = *registryView.begin();
+
+            auto [transform, camera2d] =
+                registryView.get<Transform, Camera2D>(entity);
+
+            camera2d.calculate(windowSize);
+        }
+    }
+
     void RenderSystem::render(entt::registry* registry)
     {
-        float model[16];
         float white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+        if (const auto registryView = registry->view<Transform, Camera2D>(); registryView.begin() != registryView.end())
+        {
+            const auto entity = *registryView.begin();
+
+            auto [transform, camera2d] =
+                registryView.get<Transform, Camera2D>(entity);
+
+            camera2d.updateView(transform);
+            bgfx::setViewTransform(Graphics::DEFAULT, camera2d.view, camera2d.proj);
+        }
+
+        bgfx::touch(Graphics::DEFAULT);
+
         registry->view<const Transform, const MeshRenderer>().each(
-            [&model, &white](entt::entity _, const Transform& transform, const MeshRenderer& mesh)
+            [&white](entt::entity _, const Transform& transform, const MeshRenderer& mesh)
             {
                 const bgfx::VertexBufferHandle vbh = {mesh.meshData->vbh_idx};
                 const bgfx::IndexBufferHandle ibh = {mesh.meshData->ibh_idx};

@@ -8,8 +8,11 @@
 #include "miniengine/math/vector3.h"
 #include <utility>
 
+#include "entity.h"
 #include "bgfx/bgfx.h"
+#include "bx/math.h"
 #include "miniengine/core/graphics.h"
+#include "miniengine/math/vector2.h"
 #include "spdlog/spdlog.h"
 
 namespace MiniEngine
@@ -143,6 +146,24 @@ namespace MiniEngine
             bgfx::destroy(bgfx::UniformHandle{ucolor_idx});
             ucolor_idx = BGFX_INVALID_HANDLE;
         }
+    }
+
+    void Camera2D::calculate(const Vector2& windowSize)
+    {
+        const float halfWidth = windowSize.x / (2.0f * zoom);
+        const float halfHeight = windowSize.y / (2.0f * zoom);
+
+        bx::mtxOrtho(
+        proj,-halfWidth,halfWidth,
+         halfHeight,-halfHeight,
+        -100.0f,100.0f, 0.0f,bgfx::getCaps()->homogeneousDepth);
+    }
+
+    void Camera2D::updateView(const Transform& transform)
+    {
+        bx::mtxLookAt(view,
+    {transform.position.x, transform.position.y, -1.0f},
+    {transform.position.x, transform.position.y, 0.0f});
     }
 
     void Graphics::rendererComponentInit()

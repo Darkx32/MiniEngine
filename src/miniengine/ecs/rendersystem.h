@@ -8,9 +8,14 @@
 
 namespace MiniEngine
 {
+    struct Vector2;
+
     struct RenderSystem
     {
+        static void calculate(entt::registry* registry, const Vector2& windowSize);
         static void render(entt::registry* registry);
+
+        static float model[16];
     };
 } // MiniEngine
 
