@@ -12,7 +12,7 @@ namespace MiniEngine
     void ScriptSystem::startup(entt::registry* registry)
     {
         registry->view<ScriptComponent>().each(
-            [](entt::entity _, const ScriptComponent& scriptComponent)
+            [](const ScriptComponent& scriptComponent)
             {
                for (auto& script : scriptComponent.scripts)
                {
@@ -24,7 +24,7 @@ namespace MiniEngine
     void ScriptSystem::update(entt::registry* registry, float dt)
     {
         registry->view<ScriptComponent>().each(
-            [dt](entt::entity _, const ScriptComponent& scriptComponent)
+            [dt](const ScriptComponent& scriptComponent)
             {
                for (auto& script : scriptComponent.scripts)
                {

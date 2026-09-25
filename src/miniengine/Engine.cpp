@@ -2,11 +2,11 @@
 #include <spdlog/spdlog.h>
 
 #include "bgfx/bgfx.h"
-#include "bx/math.h"
 #include "core/graphics.h"
 #include "core/inputsystem.h"
 #include "core/resourcemanager.h"
 #include "core/scene.h"
+#include "ecs/physicssystem.h"
 #include "ecs/rendersystem.h"
 #include "ecs/scriptsystem.h"
 #include "SDL3/SDL_timer.h"
@@ -44,6 +44,9 @@ bool Engine::init(const std::string& title, const Vector2 size) {
         spdlog::error("Failed to initialize Graphics");
         return false;
     }
+
+    spdlog::info("Physics System initialize");
+    PhysicsSystem::initialize();
 
     spdlog::info("Miniengine started successfully.");
     isRunning = true;
@@ -87,6 +90,8 @@ void Engine::run() {
 
         InputSystem::update();
         window->pollEvents();
+        if (scene)
+            PhysicsSystem::update(scene->registry);
 
         if (window->windowShouldClose() || InputSystem::isKeyPressed(InputSystem::KeyCode::Escape))
             isRunning = false;
@@ -123,6 +128,7 @@ void Engine::run() {
 void Engine::shutdown() const
 {
     resourceManager->clean();
+    PhysicsSystem::shutdown();
     Graphics::shutdown();
 
     delete window;

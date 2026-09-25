@@ -2,6 +2,7 @@
 #include "core/graphics.h"
 #include "core/scene.h"
 #include "ecs/entity.h"
+#include "ecs/physics.h"
 #include "ecs/renderer.h"
 
 class Player : public MiniEngine::IScript
@@ -32,6 +33,7 @@ int main() {
     auto& resourceManager = engine.getResourceManager();
     camera.addComponent<MiniEngine::Camera2D>();
     entity.addComponent<MiniEngine::MeshRenderer>(resourceManager.get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
+    entity.addComponent<MiniEngine::RigidBody>(entity.getComponent<MiniEngine::Transform>());
 
     entity.addScript(std::make_unique<Player>());
 

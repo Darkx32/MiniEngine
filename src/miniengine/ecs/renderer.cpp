@@ -155,14 +155,14 @@ namespace MiniEngine
 
         bx::mtxOrtho(
         proj,-halfWidth,halfWidth,
-         halfHeight,-halfHeight,
+         -halfHeight,halfHeight,
         -100.0f,100.0f, 0.0f,bgfx::getCaps()->homogeneousDepth);
     }
 
     void Camera2D::updateView(const Transform& transform)
     {
         bx::mtxLookAt(view,
-    {transform.position.x, transform.position.y, -1.0f},
+    {transform.position.x, transform.position.y, 1.0f},
     {transform.position.x, transform.position.y, 0.0f});
     }
 

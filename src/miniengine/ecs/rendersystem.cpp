@@ -46,7 +46,7 @@ namespace MiniEngine
         bgfx::touch(Graphics::DEFAULT);
 
         registry->view<const Transform, const MeshRenderer>().each(
-            [&white](entt::entity _, const Transform& transform, const MeshRenderer& mesh)
+            [&white](const Transform& transform, const MeshRenderer& mesh)
             {
                 const bgfx::VertexBufferHandle vbh = {mesh.meshData->vbh_idx};
                 const bgfx::IndexBufferHandle ibh = {mesh.meshData->ibh_idx};
