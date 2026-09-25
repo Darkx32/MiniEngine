@@ -13,5 +13,6 @@ namespace MiniEngine
 
         addComponent<Transform>();
         addComponent<ScriptComponent>();
+
     }
 } // MiniEngine

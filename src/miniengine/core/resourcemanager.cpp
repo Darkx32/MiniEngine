@@ -6,4 +6,5 @@
 
 namespace MiniEngine
 {
+    ResourceManager* ResourceManager::p_resource = nullptr;
 } // MiniEngine

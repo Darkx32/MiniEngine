@@ -32,6 +32,8 @@ namespace MiniEngine
             {
                 freeIds.push_back(i);
             }
+
+            p_resource = this;
         }
 
         ~ResourceManager()
@@ -90,6 +92,7 @@ namespace MiniEngine
         }
 
         size_t size() const { return order.size(); }
+        static ResourceManager& get() { return *p_resource; }
 
     private:
         struct Entry
@@ -103,6 +106,8 @@ namespace MiniEngine
             resources.erase(oldestId);
             freeIds.push_back(oldestId);
         }
+
+        static ResourceManager* p_resource;
 
         std::vector<uint16_t> freeIds;
         std::list<Entry> order;

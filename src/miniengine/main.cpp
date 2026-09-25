@@ -12,6 +12,8 @@ public:
     {
         auto& transform = entity->getComponent<MiniEngine::Transform>();
         transform.scale = {100, 100, 1};
+        entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
+        entity->addComponent<MiniEngine::RigidBody>(entity->getComponent<MiniEngine::Transform>());
     }
     void update(float dt) override
     {
@@ -30,11 +32,8 @@ int main() {
     MiniEngine::Scene scene;
     auto entity = scene.createEntity();
     auto camera = scene.createEntity();
-    auto& resourceManager = engine.getResourceManager();
-    camera.addComponent<MiniEngine::Camera2D>();
-    entity.addComponent<MiniEngine::MeshRenderer>(resourceManager.get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
-    entity.addComponent<MiniEngine::RigidBody>(entity.getComponent<MiniEngine::Transform>());
 
+    camera.addComponent<MiniEngine::Camera2D>();
     entity.addScript(std::make_unique<Player>());
 
     engine.setScene(&scene);

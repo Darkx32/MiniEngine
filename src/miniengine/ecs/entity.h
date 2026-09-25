@@ -6,11 +6,14 @@
 #define MINIENGINE_ENTITY_H
 
 #include "entt/entt.hpp"
+#include "miniengine/core/resourcemanager.h"
 #include "miniengine/core/scene.h"
 #include "miniengine/math/vector3.h"
 
 namespace MiniEngine
 {
+    class ResourceManager;
+
     class IScript
     {
     public:
@@ -18,7 +21,11 @@ namespace MiniEngine
         virtual void startup() = 0;
         virtual void update(float dt) = 0;
 
+    protected:
+        friend class Entity;
+
         Entity* entity = nullptr;
+        ResourceManager* resourceManager = nullptr;
     };
 
     struct ScriptComponent
@@ -52,6 +59,7 @@ namespace MiniEngine
         void addScript(std::unique_ptr<IScript> script)
         {
             script->entity = this;
+            script->resourceManager = &ResourceManager::get();
             auto& [scripts] = getComponent<ScriptComponent>();
             scripts.emplace_back(
                 std::move(script)
