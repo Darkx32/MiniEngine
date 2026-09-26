@@ -13,8 +13,6 @@
 
 namespace MiniEngine
 {
-    float RenderSystem::model[16] = {};
-
     void RenderSystem::calculate(entt::registry* registry, const Vector2& windowSize)
     {
         if (const auto registryView = registry->view<Transform, Camera2D>(); registryView.begin() != registryView.end())
@@ -52,6 +50,8 @@ namespace MiniEngine
                 const bgfx::IndexBufferHandle ibh = {mesh.meshData->ibh_idx};
                 const bgfx::ProgramHandle program = {mesh.meshData->program_idx};
                 const bgfx::UniformHandle color = {mesh.meshData->ucolor_idx};
+
+                float model[16];
 
                 bx::mtxSRT(model,
                 transform.scale.x, transform.scale.y, transform.scale.z,

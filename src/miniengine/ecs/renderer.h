@@ -26,6 +26,12 @@ namespace MiniEngine
         ~QuadPrimitive() override;
     };
 
+    struct CirclePrimitive : IResource, MeshData
+    {
+        CirclePrimitive();
+        ~CirclePrimitive() override;
+    };
+
     struct Camera2D
     {
         float zoom = 1.0f;

@@ -86,10 +86,11 @@ namespace MiniEngine
             return false;
         }
 
-        bgfx::setViewRect(Graphics::DEFAULT, 0, 0, static_cast<uint16_t>(initData.width), static_cast<uint16_t>(initData.height));
+        bgfx::setViewRect(DEFAULT, 0, 0, static_cast<uint16_t>(initData.width), static_cast<uint16_t>(initData.height));
 
         rendererComponentInit();
         QuadPrimitiveID = initData.resourceManager->create<QuadPrimitive>();
+        CirclePrimitiveID = initData.resourceManager->create<CirclePrimitive>();
 
         return true;
     }
@@ -101,4 +102,5 @@ namespace MiniEngine
 
     uint32_t Graphics::color = 0x000000FF;
     uint16_t Graphics::QuadPrimitiveID = 0xFFFF;
+    uint16_t Graphics::CirclePrimitiveID = 0xFFFF;
 } // MiniAudio

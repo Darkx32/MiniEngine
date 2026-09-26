@@ -1,6 +1,6 @@
 #include "Engine.h"
 #include "core/graphics.h"
-#include "core/scene.h" 
+#include "core/scene.h"
 #include "ecs/entity.h"
 #include "ecs/physics.h"
 #include "ecs/renderer.h"
@@ -14,8 +14,8 @@ namespace
         {
             auto& transform = entity->getComponent<MiniEngine::Transform>();
             transform.scale = {100, 100, 1};
-            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
-            entity->addComponent<MiniEngine::RigidBody>(transform);
+            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::CirclePrimitive>(MiniEngine::Graphics::CirclePrimitiveID));
+            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic, MiniEngine::RigidBody::ShapeType::Circle);
         }
         void update(float dt) override
         {

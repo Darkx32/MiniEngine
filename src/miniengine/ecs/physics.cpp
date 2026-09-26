@@ -45,7 +45,7 @@ namespace MiniEngine
         case ShapeType::Circle:
             {
                 const b2Circle circle{
-                    .center = {.x = 0.0f, .y = 0.0f}, .radius = transform.scale.x / 2.f};
+                    .center = {.x = 0.0f, .y = 0.0f}, .radius = transform.scale.x};
                 b2CreateCircleShape(id, &shapeDef, &circle);
                 break;
             }

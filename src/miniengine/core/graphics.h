@@ -23,6 +23,7 @@ namespace MiniEngine
         static void setClearColor(uint32_t newColor);
 
         static uint16_t QuadPrimitiveID;
+        static uint16_t CirclePrimitiveID;
 
     private:
         friend class Engine;

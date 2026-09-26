@@ -148,6 +148,93 @@ namespace MiniEngine
         }
     }
 
+    CirclePrimitive::CirclePrimitive()
+    {
+        std::vector<PosColorVertex> vertices;
+        std::vector<uint16_t> indices;
+
+        vertices.push_back({{0.0f, 0.0f, 0.0f}});
+
+        constexpr uint16_t segments = 32;
+
+        for (uint16_t i = 0; i < segments; ++i)
+        {
+            const float angle = static_cast<float>(i) / static_cast<float>(segments) * bx::kPi2;
+
+            vertices.push_back({
+                {
+                    bx::cos(angle),
+                    bx::sin(angle),
+                    0.0f
+                }});
+
+            indices.push_back(0);
+            indices.push_back((i + 1) % segments + 1);
+            indices.push_back(i + 1);
+        }
+
+        spdlog::info("Circle primitive: {} Vertices {} Indices", vertices.size(), indices.size());
+
+        const auto vbh = bgfx::createVertexBuffer(
+            bgfx::copy(vertices.data(), sizeof(PosColorVertex) * vertices.size()),
+            PosColorVertex::ms_layout);
+
+        const auto ibh = bgfx::createIndexBuffer(
+            bgfx::copy(indices.data(), sizeof(uint16_t) * indices.size()));
+
+        const auto [vsh, fsh] = createShaderByRenderer();
+
+        const auto program = bgfx::createProgram(vsh, fsh, true);
+
+        const auto color = bgfx::createUniform("u_color", bgfx::UniformType::Vec4);
+
+        if (!bgfx::isValid(vbh) || !bgfx::isValid(ibh))
+        {
+            spdlog::error("Error to create vertices and indices for quad primitive");
+            vbh_idx = BGFX_INVALID_HANDLE;
+            ibh_idx = BGFX_INVALID_HANDLE;
+        }
+        else if (!bgfx::isValid(program))
+        {
+            spdlog::error("Error to create shader program for quad primitive");
+            program_idx = BGFX_INVALID_HANDLE;
+        }
+        else if (!bgfx::isValid(color))
+        {
+            spdlog::error("Error to create color uniform for quad primitive");
+            ucolor_idx = BGFX_INVALID_HANDLE;
+        }
+
+        vbh_idx = vbh.idx;
+        ibh_idx = ibh.idx;
+        program_idx = program.idx;
+        ucolor_idx = color.idx;
+    }
+
+    CirclePrimitive::~CirclePrimitive()
+    {
+        if (bgfx::isValid(bgfx::VertexBufferHandle{vbh_idx}))
+        {
+            bgfx::destroy(bgfx::VertexBufferHandle{vbh_idx});
+            vbh_idx = BGFX_INVALID_HANDLE;
+        }
+        if (bgfx::isValid(bgfx::IndexBufferHandle{ibh_idx}))
+        {
+            bgfx::destroy(bgfx::IndexBufferHandle{ibh_idx});
+            ibh_idx = BGFX_INVALID_HANDLE;
+        }
+        if (bgfx::isValid(bgfx::ProgramHandle{program_idx}))
+        {
+            bgfx::destroy(bgfx::ProgramHandle{program_idx});
+            program_idx = BGFX_INVALID_HANDLE;
+        }
+        if (bgfx::isValid(bgfx::UniformHandle{ucolor_idx}))
+        {
+            bgfx::destroy(bgfx::UniformHandle{ucolor_idx});
+            ucolor_idx = BGFX_INVALID_HANDLE;
+        }
+    }
+
     void Camera2D::calculate(const Vector2& windowSize)
     {
         const float halfWidth = windowSize.x / (2.0f * zoom);

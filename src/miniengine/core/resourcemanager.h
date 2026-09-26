@@ -11,6 +11,8 @@
 #include <memory>
 #include <vector>
 
+#include "spdlog/spdlog.h"
+
 namespace MiniEngine
 {
     struct IResource
@@ -66,7 +68,14 @@ namespace MiniEngine
             if (it == resources.end()) return nullptr;
 
             order.splice(order.begin(), order, it->second);
-            return dynamic_cast<T*>(it->second->resource.get());
+            auto* resource = dynamic_cast<T*>(it->second->resource.get());
+
+            if (!resource)
+            {
+                spdlog::error("Resource {} exists, but requested type is wrong", id);
+            }
+
+            return resource;
         }
 
         bool destroy(const uint16_t id) {
