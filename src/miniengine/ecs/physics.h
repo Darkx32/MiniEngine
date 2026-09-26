@@ -8,6 +8,7 @@
 
 namespace MiniEngine
 {
+    struct Vector2;
     struct Transform;
 
     class RigidBody
@@ -20,14 +21,22 @@ namespace MiniEngine
             Capsule
         };
 
-        explicit RigidBody(const Transform& transform, ShapeType type = ShapeType::Box);
+        enum class BodyType
+        {
+            Dynamic,
+            Static,
+            Kinematic
+        };
+
+        explicit RigidBody(const Transform& transform, BodyType bodyType = BodyType::Dynamic, ShapeType shapeType = ShapeType::Box);
         ~RigidBody();
 
+        void addForce(const Vector2& force) const;
+        void setGravityScale(float gravity) const;
         [[nodiscard]] bool isValid() const;
         [[nodiscard]] b2BodyId getId() const {return id;}
 
     private:
-        ShapeType type;
         b2BodyId id{};
     };
 } // MiniEngine

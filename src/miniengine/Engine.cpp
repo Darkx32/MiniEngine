@@ -91,7 +91,7 @@ void Engine::run() {
         InputSystem::update();
         window->pollEvents();
         if (scene)
-            PhysicsSystem::update(scene->registry);
+            PhysicsSystem::update(scene->registry, dt);
 
         if (window->windowShouldClose() || InputSystem::isKeyPressed(InputSystem::KeyCode::Escape))
             isRunning = false;

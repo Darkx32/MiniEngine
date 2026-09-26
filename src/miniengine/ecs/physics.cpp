@@ -7,13 +7,25 @@
 #include "entity.h"
 #include "physicssystem.h"
 #include "box2d/box2d.h"
+#include "miniengine/math/vector2.h"
 
 namespace MiniEngine
 {
-    RigidBody::RigidBody(const Transform& transform, const ShapeType type) : type(type)
+    RigidBody::RigidBody(const Transform& transform, const BodyType bodyType, const ShapeType shapeType)
     {
         b2BodyDef bodyDef = b2DefaultBodyDef();
-        bodyDef.type = b2_dynamicBody;
+        switch (bodyType)
+        {
+        case BodyType::Dynamic:
+            bodyDef.type = b2_dynamicBody;
+            break;
+        case BodyType::Static:
+            bodyDef.type = b2_staticBody;
+            break;
+        case BodyType::Kinematic:
+            bodyDef.type = b2_kinematicBody;
+            break;
+        }
         bodyDef.position = {.x = transform.position.x, .y = transform.position.y};
 
         id = b2CreateBody(PhysicsSystem::getWorldId(), &bodyDef);
@@ -22,7 +34,7 @@ namespace MiniEngine
         shapeDef.density = 1.0f;
         shapeDef.material.friction = 0.3f;
 
-        switch (type)
+        switch (shapeType)
         {
         case ShapeType::Box:
             {
@@ -56,6 +68,16 @@ namespace MiniEngine
     {
         if (isValid())
             b2DestroyBody(id);
+    }
+
+    void RigidBody::addForce(const Vector2& force) const
+    {
+        b2Body_ApplyForceToCenter(id, {.x = force.x, .y = force.y}, true);
+    }
+
+    void RigidBody::setGravityScale(float gravity) const
+    {
+        b2Body_SetGravityScale(id, gravity);
     }
 
     bool RigidBody::isValid() const

@@ -19,12 +19,11 @@ namespace MiniEngine
         id = b2CreateWorld(&worldDef);
     }
 
-    void PhysicsSystem::update(entt::registry* registry)
+    void PhysicsSystem::update(entt::registry* registry, const float dt)
     {
-        constexpr float timeStep = 1.0f / 60.0f;
         constexpr int subStepCount = 4;
 
-        b2World_Step(id, timeStep, subStepCount);
+        b2World_Step(id, dt, subStepCount);
 
         registry->view<Transform, const RigidBody>().each(
             [](Transform& transform, const RigidBody& rigidbody)

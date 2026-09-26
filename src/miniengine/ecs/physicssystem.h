@@ -13,7 +13,7 @@ namespace MiniEngine
     {
     public:
         static void initialize();
-        static void update(entt::registry* registry);
+        static void update(entt::registry* registry, float dt);
         static void shutdown();
 
         static b2WorldId getWorldId() {return id;}

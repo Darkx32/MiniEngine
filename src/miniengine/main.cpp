@@ -1,25 +1,45 @@
 #include "Engine.h"
 #include "core/graphics.h"
-#include "core/scene.h"
+#include "core/scene.h" 
 #include "ecs/entity.h"
 #include "ecs/physics.h"
 #include "ecs/renderer.h"
 
-class Player : public MiniEngine::IScript
+namespace
 {
-public:
-    void startup() override
+    class Player : public MiniEngine::IScript
     {
-        auto& transform = entity->getComponent<MiniEngine::Transform>();
-        transform.scale = {100, 100, 1};
-        entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
-        entity->addComponent<MiniEngine::RigidBody>(entity->getComponent<MiniEngine::Transform>());
-    }
-    void update(float dt) override
-    {
+    public:
+        void startup() override
+        {
+            auto& transform = entity->getComponent<MiniEngine::Transform>();
+            transform.scale = {100, 100, 1};
+            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
+            entity->addComponent<MiniEngine::RigidBody>(transform);
+        }
+        void update(float dt) override
+        {
 
-    }
-};
+        }
+    };
+
+    class Ground : public MiniEngine::IScript
+    {
+    public:
+        void startup() override
+        {
+            auto& transform = entity->getComponent<MiniEngine::Transform>();
+            transform.position = {0, -300, 1};
+            transform.scale = {400, 50, 1};
+            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
+            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Static);
+        }
+        void update(float dt) override
+        {
+
+        }
+    };
+}
 
 int main() {
     MiniEngine::Graphics::setClearColor(0x40afffFF);
@@ -30,6 +50,9 @@ int main() {
     }
 
     MiniEngine::Scene scene;
+    auto ground = scene.createEntity();
+    ground.addScript(std::make_unique<Ground>());
+
     auto entity = scene.createEntity();
     auto camera = scene.createEntity();
 
