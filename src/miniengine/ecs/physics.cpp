@@ -27,6 +27,7 @@ namespace MiniEngine
             break;
         }
         bodyDef.position = {.x = transform.position.x, .y = transform.position.y};
+        bodyDef.rotation = b2MakeRot(-transform.rotation.z);
 
         id = b2CreateBody(PhysicsSystem::getWorldId(), &bodyDef);
 

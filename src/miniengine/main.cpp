@@ -13,9 +13,9 @@ namespace
         void startup() override
         {
             auto& transform = entity->getComponent<MiniEngine::Transform>();
-            transform.scale = {100, 100, 1};
-            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::CirclePrimitive>(MiniEngine::Graphics::CirclePrimitiveID));
-            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic, MiniEngine::RigidBody::ShapeType::Circle);
+            transform.scale = {100, 100, 0.0f};
+            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
+            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic, MiniEngine::RigidBody::ShapeType::Box);
         }
         void update(float dt) override
         {
@@ -31,6 +31,7 @@ namespace
             auto& transform = entity->getComponent<MiniEngine::Transform>();
             transform.position = {0, -300, 1};
             transform.scale = {400, 50, 1};
+            transform.rotation.z = 20;
             entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID));
             entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Static);
         }

@@ -35,7 +35,7 @@ namespace MiniEngine
 
             transform.position.x = x;
             transform.position.y = y;
-            transform.rotation.z = b2Rot_GetAngle(rotation);
+            transform.rotation.z = -b2Rot_GetAngle(rotation);
         });
     }
 
