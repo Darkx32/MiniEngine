@@ -44,10 +44,14 @@ namespace MiniEngine
         registry->view<const Transform, const MeshRenderer>().each(
             [](const Transform& transform, const MeshRenderer& mesh)
             {
-                const bgfx::VertexBufferHandle vbh = {mesh.meshData->vbh_idx};
-                const bgfx::IndexBufferHandle ibh = {mesh.meshData->ibh_idx};
-                const bgfx::ProgramHandle program = {mesh.meshData->program_idx};
-                const bgfx::UniformHandle color = {mesh.meshData->ucolor_idx};
+                auto& resourceManager = ResourceManager::get();
+                const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshData);
+                const auto& p_material = resourceManager.get<Material>(mesh.material);
+
+                const bgfx::VertexBufferHandle vbh = {p_meshData->vbh_idx};
+                const bgfx::IndexBufferHandle ibh = {p_meshData->ibh_idx};
+                const bgfx::ProgramHandle program = {p_meshData->program_idx};
+                const bgfx::UniformHandle color = {p_meshData->ucolor_idx};
 
                 float model[16];
 
@@ -58,7 +62,7 @@ namespace MiniEngine
 
                 bgfx::setTransform(model);
 
-                bgfx::setUniform(color, mesh.material->color);
+                bgfx::setUniform(color, p_material->color);
 
                 bgfx::setVertexBuffer(0, vbh);
                 bgfx::setIndexBuffer(ibh);

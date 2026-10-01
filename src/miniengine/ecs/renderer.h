@@ -11,7 +11,7 @@ namespace MiniEngine
     struct Transform;
     struct Vector2;
 
-    struct MeshData
+    struct MeshData : IResource
     {
         uint16_t vbh_idx = 0xFFFF;
         uint16_t ibh_idx = 0xFFFF;
@@ -31,13 +31,13 @@ namespace MiniEngine
         ~Material() override;
     };
 
-    struct QuadPrimitive : IResource, MeshData
+    struct QuadPrimitive : MeshData
     {
         QuadPrimitive();
         ~QuadPrimitive() override;
     };
 
-    struct CirclePrimitive : IResource, MeshData
+    struct CirclePrimitive : MeshData
     {
         CirclePrimitive();
         ~CirclePrimitive() override;
@@ -56,9 +56,9 @@ namespace MiniEngine
 
     struct MeshRenderer
     {
-        explicit MeshRenderer(const MeshData* mesh, const Material* material) : meshData(mesh), material(material) {}
-        const MeshData* meshData{nullptr};
-        const Material* material{nullptr};
+        explicit MeshRenderer(const uint16_t mesh, const uint16_t material) : meshData(mesh), material(material) {}
+        const uint16_t meshData = 0xFFFF;
+        const uint16_t material = 0xFFFF;
     };
 }
 

@@ -15,8 +15,8 @@ namespace
             auto& transform = entity->getComponent<MiniEngine::Transform>();
             transform.scale = {100, 100, 0.0f};
             const uint16_t materialId = resourceManager->create<MiniEngine::Material>();
-            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID),
-                    resourceManager->get<MiniEngine::Material>(materialId));
+            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID,
+                    materialId);
             entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic, MiniEngine::RigidBody::ShapeType::Box);
         }
         void update(float dt) override
@@ -35,8 +35,8 @@ namespace
             transform.scale = {400, 50, 1};
             transform.rotation.z = 20;
             const uint16_t materialId = resourceManager->create<MiniEngine::Material>();
-            entity->addComponent<MiniEngine::MeshRenderer>(resourceManager->get<MiniEngine::QuadPrimitive>(MiniEngine::Graphics::QuadPrimitiveID),
-                    resourceManager->get<MiniEngine::Material>(materialId));
+            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID,
+                    materialId);
             entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Static);
         }
         void update(float dt) override
