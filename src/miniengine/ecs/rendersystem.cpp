@@ -28,8 +28,6 @@ namespace MiniEngine
 
     void RenderSystem::render(entt::registry* registry)
     {
-        float white[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
         if (const auto registryView = registry->view<Transform, Camera2D>(); registryView.begin() != registryView.end())
         {
             const auto entity = *registryView.begin();
@@ -44,7 +42,7 @@ namespace MiniEngine
         bgfx::touch(Graphics::DEFAULT);
 
         registry->view<const Transform, const MeshRenderer>().each(
-            [&white](const Transform& transform, const MeshRenderer& mesh)
+            [](const Transform& transform, const MeshRenderer& mesh)
             {
                 const bgfx::VertexBufferHandle vbh = {mesh.meshData->vbh_idx};
                 const bgfx::IndexBufferHandle ibh = {mesh.meshData->ibh_idx};
@@ -60,7 +58,7 @@ namespace MiniEngine
 
                 bgfx::setTransform(model);
 
-                bgfx::setUniform(color, white);
+                bgfx::setUniform(color, mesh.material->color);
 
                 bgfx::setVertexBuffer(0, vbh);
                 bgfx::setIndexBuffer(ibh);

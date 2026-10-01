@@ -74,6 +74,31 @@ namespace MiniEngine
         };
     }
 
+    Material::Material() : color{1.0f, 1.0f, 1.0f, 1.0f}
+    {
+        texture = BGFX_INVALID_HANDLE;
+    }
+
+    Material::Material(const float* c) : color{}
+    {
+        std::copy(c, std::next(c, 3), color);
+        texture = BGFX_INVALID_HANDLE;
+    }
+
+    Material::Material(const char* filepath) : color{1.0f, 1.0f, 1.0f, 1.0f}
+    {
+        // Create texture using image from filepath
+        texture = BGFX_INVALID_HANDLE;
+    }
+
+    Material::~Material()
+    {
+        if (const auto textureHandle = bgfx::TextureHandle{texture}; bgfx::isValid(textureHandle))
+        {
+            bgfx::destroy(textureHandle);
+        }
+    }
+
     QuadPrimitive::QuadPrimitive()
     {
         static PosColorVertex s_vertices[] = {

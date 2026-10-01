@@ -20,6 +20,17 @@ namespace MiniEngine
         uint16_t ucolor_idx= 0xFFFF;
     };
 
+    struct Material : IResource
+    {
+        float color[4];
+        uint16_t texture;
+
+        Material();
+        explicit Material(const float* c);
+        explicit Material(const char* filepath);
+        ~Material() override;
+    };
+
     struct QuadPrimitive : IResource, MeshData
     {
         QuadPrimitive();
@@ -45,8 +56,9 @@ namespace MiniEngine
 
     struct MeshRenderer
     {
-        explicit MeshRenderer(const MeshData* mesh) : meshData(mesh) {}
+        explicit MeshRenderer(const MeshData* mesh, const Material* material) : meshData(mesh), material(material) {}
         const MeshData* meshData{nullptr};
+        const Material* material{nullptr};
     };
 }
 
