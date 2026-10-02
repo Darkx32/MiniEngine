@@ -4,7 +4,6 @@
 
 #ifndef MINIENGINE_INPUTSYSTEM_H
 #define MINIENGINE_INPUTSYSTEM_H
-#include <bitset>
 #include <cstdint>
 
 #include "window.h"
@@ -41,6 +40,19 @@ namespace MiniEngine
             Backspace = 42,
             Tab = 43,
             Space = 44,
+
+            F1  = 58,
+            F2  = 59,
+            F3  = 60,
+            F4  = 61,
+            F5  = 62,
+            F6  = 63,
+            F7  = 64,
+            F8  = 65,
+            F9  = 66,
+            F10 = 67,
+            F11 = 68,
+            F12 = 69,
 
             LeftCtrl = 224,
             LeftShift = 225,

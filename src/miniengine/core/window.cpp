@@ -4,6 +4,7 @@
 
 #include "window.h"
 
+#include "debugui.h"
 #include "SDL3/SDL_init.h"
 #include "spdlog/spdlog.h"
 
@@ -72,6 +73,8 @@ namespace MiniEngine
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
+            DebugUI::update(&event);
+
             if (event.type == SDL_EVENT_QUIT || event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED)
                 isOpen = false;
             if (event.type == SDL_EVENT_WINDOW_RESIZED)

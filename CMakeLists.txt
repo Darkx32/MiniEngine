@@ -48,6 +48,9 @@ set(MINIAUDIO_BUILD_TOOLS OFF CACHE BOOL "Build miniaudio tools" FORCE)
 set(ENTT_BUILD_TESTING OFF CACHE BOOL "Build EnTT tests" FORCE)
 set(ENTT_BUILD_DOCS OFF CACHE BOOL "Build EnTT docs" FORCE)
 
+# ImGui configuration
+set(IMGUI_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/imgui" CACHE PATH "Location of ImGui" FORCE)
+
 # -------------------------------------------------------------
 # Add External Dependencies
 # -------------------------------------------------------------
@@ -70,6 +73,21 @@ add_subdirectory(external/spdlog)
 
 # EnTT (ECS)
 add_subdirectory(external/entt)
+
+# ImGui
+add_library(imgui STATIC
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
+)
+target_include_directories(imgui PUBLIC
+    ${IMGUI_DIR}
+    ${IMGUI_DIR}/backends
+)
+target_link_libraries(imgui PUBLIC SDL3::SDL3)
 
 # -------------------------------------------------------------
 # bgfx Shader Compiler Integration
@@ -161,7 +179,7 @@ foreach(SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
 endforeach()
 
 string(APPEND MASTER_SHADER_CONTENT "
-namespace miniengine::Shaders {
+namespace MiniEngine::Shaders {
     static const bgfx::EmbeddedShader s_embeddedShaders[] = {
 ")
 
@@ -182,7 +200,7 @@ string(APPEND MASTER_SHADER_CONTENT "        BGFX_EMBEDDED_SHADER_END()
         bgfx::ShaderHandle fsh = createShader(fsName);
         return bgfx::createProgram(vsh, fsh, destroyShaders);
     }
-} // namespace miniengine::Shaders
+} // namespace MiniEngine::Shaders
 ")
 
 file(WRITE "${SHADER_OUTPUT_DIR}/miniengine_shaders.hpp" "${MASTER_SHADER_CONTENT}")
@@ -217,6 +235,7 @@ target_include_directories(miniengine PRIVATE
     "${BX_DIR}/include"
     "${BIMG_DIR}/include"
     "${BGFX_DIR}/include"
+    "${IMGUI_DIR}"
 )
 
 # Link all requested libraries
@@ -229,4 +248,5 @@ target_link_libraries(miniengine PRIVATE
     miniaudio
     spdlog::spdlog
     EnTT::EnTT
+    imgui
 )

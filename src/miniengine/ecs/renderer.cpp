@@ -3,10 +3,8 @@
 //
 #include "renderer.h"
 
-#include "vs_simple.bin.h"
-#include "fs_simple.bin.h"
+#include "miniengine_shaders.hpp"
 #include "miniengine/math/vector3.h"
-#include <utility>
 
 #include "entity.h"
 #include "bgfx/bgfx.h"
@@ -33,46 +31,6 @@ namespace MiniEngine
         };
     }
     bgfx::VertexLayout PosColorVertex::ms_layout;
-
-    static std::pair<bgfx::ShaderHandle, bgfx::ShaderHandle> createShaderByRenderer()
-    {
-        const uint8_t* datav = nullptr;
-        const uint8_t* dataf = nullptr;
-        size_t sizev = 0;
-        size_t sizef = 0;
-
-        switch (bgfx::getRendererType())
-        {
-        case bgfx::RendererType::OpenGLES:
-            datav = vs_simple_essl;
-            sizev = sizeof(vs_simple_essl);
-            dataf = fs_simple_essl;
-            sizef = sizeof(fs_simple_essl);
-            break;
-        case bgfx::RendererType::OpenGL:
-            datav = vs_simple_glsl;
-            sizev = sizeof(vs_simple_glsl);
-            dataf = fs_simple_glsl;
-            sizef = sizeof(fs_simple_glsl);
-            break;
-        case bgfx::RendererType::Vulkan:
-            datav = vs_simple_spv;
-            sizev = sizeof(vs_simple_spv);
-            dataf = fs_simple_spv;
-            sizef = sizeof(fs_simple_spv);
-            break;
-
-        default:
-            break;
-        }
-
-        if (!dataf || !datav)
-            return {BGFX_INVALID_HANDLE, BGFX_INVALID_HANDLE};
-        return {
-            bgfx::createShader(bgfx::makeRef(datav, static_cast<uint32_t>(sizev))),
-            bgfx::createShader(bgfx::makeRef(dataf, static_cast<uint32_t>(sizef)))
-        };
-    }
 
     Material::Material() : color{1.0f, 1.0f, 1.0f, 1.0f}
     {
@@ -120,9 +78,7 @@ namespace MiniEngine
         const auto ibh = bgfx::createIndexBuffer(
             bgfx::makeRef(s_indices, sizeof(s_indices)));
 
-        const auto [vsh, fsh] = createShaderByRenderer();
-
-        const auto program = bgfx::createProgram(vsh, fsh, true);
+        const auto program = MiniEngine::Shaders::createProgram("vs_simple", "fs_simple");
 
         const auto color = bgfx::createUniform("u_color", bgfx::UniformType::Vec4);
 
@@ -207,9 +163,7 @@ namespace MiniEngine
         const auto ibh = bgfx::createIndexBuffer(
             bgfx::copy(indices.data(), sizeof(uint16_t) * indices.size()));
 
-        const auto [vsh, fsh] = createShaderByRenderer();
-
-        const auto program = bgfx::createProgram(vsh, fsh, true);
+        const auto program = MiniEngine::Shaders::createProgram("vs_simple", "fs_simple");
 
         const auto color = bgfx::createUniform("u_color", bgfx::UniformType::Vec4);
 

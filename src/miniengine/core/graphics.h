@@ -17,7 +17,8 @@ namespace MiniEngine
         enum BgfxIdRender
         {
             DEFAULT,
-            UI
+            UI,
+            DEBUG_UI
         };
 
         static void setClearColor(uint32_t newColor);

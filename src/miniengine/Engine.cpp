@@ -2,6 +2,7 @@
 #include <spdlog/spdlog.h>
 
 #include "bgfx/bgfx.h"
+#include "core/debugui.h"
 #include "core/graphics.h"
 #include "core/inputsystem.h"
 #include "core/resourcemanager.h"
@@ -13,7 +14,7 @@
 
 namespace MiniEngine {
 
-Engine::Engine() : fps(60), isRunning(false), resourceManager(nullptr), scene(nullptr), window(nullptr)
+Engine::Engine() : fps(60), isRunning(false), isDebug(false), showDebugUI(false), resourceManager(nullptr), scene(nullptr), window(nullptr)
 {
 }
 
@@ -24,7 +25,11 @@ Engine::~Engine() {
 bool Engine::init(const std::string& title, const Vector2 size) {
     #ifndef NDEBUG
     spdlog::set_level(spdlog::level::debug);
+    isDebug = true;
+    #else
+    isDebug = false;
     #endif
+
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
     spdlog::info("MiniEngine - Starting");
     spdlog::info("Starting miniengine...");
@@ -48,8 +53,12 @@ bool Engine::init(const std::string& title, const Vector2 size) {
     spdlog::info("Physics System initialize");
     PhysicsSystem::initialize();
 
+    spdlog::info("DebugUI System initialize");
+    DebugUI::initialize(window->window);
+
     spdlog::info("Miniengine started successfully.");
     isRunning = true;
+    showDebugUI = isDebug;
     return isRunning;
 }
 
@@ -93,8 +102,9 @@ void Engine::run() {
         if (scene)
             PhysicsSystem::update(scene->registry, dt);
 
-        if (window->windowShouldClose() || InputSystem::isKeyPressed(InputSystem::KeyCode::Escape))
+        if (window->windowShouldClose() || (InputSystem::isKeyPressed(InputSystem::KeyCode::Escape) && isDebug))
             isRunning = false;
+        if (InputSystem::isKeyPressed(InputSystem::KeyCode::F12)) showDebugUI = !showDebugUI;
 
         if (window->hasResized)
         {
@@ -114,6 +124,9 @@ void Engine::run() {
         if (scene)
             RenderSystem::render(scene->registry);
 
+        if (showDebugUI && isDebug)
+            DebugUI::render();
+
         bgfx::frame();
 
         const double frameTime = (static_cast<double>(SDL_GetPerformanceCounter()) -
@@ -127,6 +140,7 @@ void Engine::run() {
 
 void Engine::shutdown() const
 {
+    DebugUI::shutdown();
     resourceManager->clean();
     PhysicsSystem::shutdown();
     Graphics::shutdown();

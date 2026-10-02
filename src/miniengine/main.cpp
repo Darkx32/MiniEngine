@@ -14,7 +14,8 @@ namespace
         {
             auto& transform = entity->getComponent<MiniEngine::Transform>();
             transform.scale = {100, 100, 0.0f};
-            const uint16_t materialId = resourceManager->create<MiniEngine::Material>();
+            constexpr float color[] = {0.0f, 0.0f, 0.0f, 1.0f};
+            const uint16_t materialId = resourceManager->create<MiniEngine::Material>(color);
             entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID,
                     materialId);
             entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic, MiniEngine::RigidBody::ShapeType::Box);

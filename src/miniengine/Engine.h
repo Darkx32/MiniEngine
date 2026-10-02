@@ -23,6 +23,8 @@ namespace MiniEngine {
     private:
         int fps;
         bool isRunning;
+        bool isDebug;
+        bool showDebugUI;
         std::unique_ptr<ResourceManager> resourceManager;
         Scene* scene;
 
