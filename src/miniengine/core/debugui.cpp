@@ -103,7 +103,31 @@ namespace MiniEngine
 
         ImGui::Begin("MiniEngine");
 
-        ImGui::Text("Hello from MiniEngine!");
+        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+
+        const bgfx::Stats* stats = bgfx::getStats();
+
+        ImGui::SeparatorText("BGFX Timers");
+
+        const uint64_t gpuTime = stats->gpuTimeEnd - stats->gpuTimeBegin;
+
+        ImGui::Text("CPU frame time: %.2f ms", static_cast<double>(stats->cpuTimeFrame) / static_cast<double>(stats->cpuTimerFreq) * 1000);
+        ImGui::Text("GPU frame time: %.2f ms", static_cast<double>(gpuTime) / static_cast<double>(stats->gpuTimerFreq) * 1000);
+        ImGui::Text("Wait render time: %.2f ms", static_cast<double>(stats->waitRender) / static_cast<double>(stats->cpuTimerFreq) * 1000);
+        ImGui::Text("Wait submit time: %.2f ms", static_cast<double>(stats->waitSubmit) / static_cast<double>(stats->cpuTimerFreq) * 1000);
+
+        ImGui::SeparatorText("Memory");
+
+        ImGui::Text("Texture memory usage: %.2f MB", static_cast<double>(stats->textureMemoryUsed) / (1024 * 1024));
+        ImGui::Text("Render memory usage: %.2f MB", static_cast<double>(stats->rtMemoryUsed) / (1024 * 1024));
+        ImGui::Text("GPU vram usage: %.2f/%.2f MB", static_cast<double>(stats->gpuMemoryUsed) / (1024 * 1024), static_cast<double>(stats->gpuMemoryMax) / (1024 * 1024));
+
+        ImGui::SeparatorText("Counters");
+
+        ImGui::Text("Draw calls: %u", stats->numDraw);
+        ImGui::Text("Textures: %u", stats->numTextures);
+        ImGui::Text("Shaders: %u", stats->numShaders);
+        ImGui::Text("Programs: %u", stats->numPrograms);
 
         ImGui::End();
         ImGui::Render();

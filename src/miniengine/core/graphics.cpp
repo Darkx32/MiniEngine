@@ -78,7 +78,7 @@ namespace MiniEngine
         init.swapChain.ndt = initData.nativeDisplayType;
         init.swapChain.width = initData.width;
         init.swapChain.height = initData.height;
-        init.reset = BGFX_RESET_NONE;
+        init.reset = BGFX_RESET_VSYNC;
 
         if (!bgfx::init(init))
         {
