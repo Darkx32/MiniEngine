@@ -7,14 +7,21 @@
 
 namespace MiniEngine
 {
-    struct Vector3 {
+    struct Vector3
+    {
         float x = 0.0f;
         float y = 0.0f;
         float z = 0.0f;
 
         constexpr Vector3() = default;
-        constexpr Vector3(const float x, const float y, const float z) : x(x), y(y), z(z) {}
-        explicit constexpr Vector3(const float scalar) : x(scalar), y(scalar), z(scalar) {}
+
+        constexpr Vector3(const float x, const float y, const float z) : x(x), y(y), z(z)
+        {
+        }
+
+        explicit constexpr Vector3(const float scalar) : x(scalar), y(scalar), z(scalar)
+        {
+        }
 
         [[nodiscard]] const float* Data() const { return &x; }
         float* Data() { return &x; }
@@ -24,10 +31,33 @@ namespace MiniEngine
         Vector3 operator*(const float scalar) const { return {x * scalar, y * scalar, z * scalar}; }
         Vector3 operator/(const float scalar) const { return {x / scalar, y / scalar, z / scalar}; }
 
-        Vector3& operator+=(const Vector3& rhs) { x += rhs.x; y += rhs.y; return *this; }
-        Vector3& operator-=(const Vector3& rhs) { x -= rhs.x; y -= rhs.y; return *this; }
-        Vector3& operator*=(const float scalar) { x *= scalar; y *= scalar; return *this; }
-        Vector3& operator/=(const float scalar) { x /= scalar; y /= scalar; return *this; }
+        Vector3& operator+=(const Vector3& rhs)
+        {
+            x += rhs.x;
+            y += rhs.y;
+            return *this;
+        }
+
+        Vector3& operator-=(const Vector3& rhs)
+        {
+            x -= rhs.x;
+            y -= rhs.y;
+            return *this;
+        }
+
+        Vector3& operator*=(const float scalar)
+        {
+            x *= scalar;
+            y *= scalar;
+            return *this;
+        }
+
+        Vector3& operator/=(const float scalar)
+        {
+            x /= scalar;
+            y /= scalar;
+            return *this;
+        }
 
         Vector3 operator-() const { return {-x, -y, -z}; }
 
@@ -51,7 +81,8 @@ namespace MiniEngine
         static const Vector3 Right;
     };
 
-    inline Vector3 operator*(const float scalar, const Vector3& vec) {
+    inline Vector3 operator*(const float scalar, const Vector3& vec)
+    {
         return vec * scalar;
     }
 } // MiniEngine

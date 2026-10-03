@@ -23,23 +23,25 @@ namespace MiniEngine
             [[maybe_unused]] ImU32 col{};
 
             static bgfx::VertexLayout layout;
+
             static void init()
             {
                 layout.begin()
-                    .add(bgfx::Attrib::Position, 2,
-                         bgfx::AttribType::Float)
+                      .add(bgfx::Attrib::Position, 2,
+                           bgfx::AttribType::Float)
 
-                    .add(bgfx::Attrib::TexCoord0, 2,
-                         bgfx::AttribType::Float)
+                      .add(bgfx::Attrib::TexCoord0, 2,
+                           bgfx::AttribType::Float)
 
-                    .add(bgfx::Attrib::Color0, 4,
-                         bgfx::AttribType::Uint8,
-                         true)
+                      .add(bgfx::Attrib::Color0, 4,
+                           bgfx::AttribType::Uint8,
+                           true)
 
-                    .end();
+                      .end();
             }
         };
     }
+
     bgfx::VertexLayout ImDrawVert::layout;
 
     void DebugUI::initialize(SDL_Window* window)
@@ -64,7 +66,7 @@ namespace MiniEngine
         ImGui_ImplSDL3_InitForOther(window);
 
         ImDrawVert::init();
-        const auto [idx] = Shaders::createProgram("vs_imgui","fs_imgui");
+        const auto [idx] = Shaders::createProgram("vs_imgui", "fs_imgui");
         idx_program = idx;
 
         const auto [texture_idx] = bgfx::createTexture2D(
@@ -109,16 +111,21 @@ namespace MiniEngine
 
         const uint64_t gpuTime = stats->gpuTimeEnd - stats->gpuTimeBegin;
 
-        ImGui::Text("CPU frame time: %.2f ms", static_cast<double>(stats->cpuTimeFrame) / static_cast<double>(stats->cpuTimerFreq) * 1000);
-        ImGui::Text("GPU frame time: %.2f ms", static_cast<double>(gpuTime) / static_cast<double>(stats->gpuTimerFreq) * 1000);
-        ImGui::Text("Wait render time: %.2f ms", static_cast<double>(stats->waitRender) / static_cast<double>(stats->cpuTimerFreq) * 1000);
-        ImGui::Text("Wait submit time: %.2f ms", static_cast<double>(stats->waitSubmit) / static_cast<double>(stats->cpuTimerFreq) * 1000);
+        ImGui::Text("CPU frame time: %.2f ms",
+                    toMs(static_cast<double>(stats->cpuTimeFrame), static_cast<double>(stats->cpuTimerFreq)));
+        ImGui::Text("GPU frame time: %.2f ms",
+                    toMs(static_cast<double>(gpuTime), static_cast<double>(stats->gpuTimerFreq)));
+        ImGui::Text("Wait render time: %.2f ms",
+                    toMs(static_cast<double>(stats->waitRender), static_cast<double>(stats->cpuTimerFreq)));
+        ImGui::Text("Wait submit time: %.2f ms",
+                    toMs(static_cast<double>(stats->waitSubmit), static_cast<double>(stats->cpuTimerFreq)));
 
         ImGui::SeparatorText("Memory");
 
-        ImGui::Text("Texture memory usage: %.2f MB", static_cast<double>(stats->textureMemoryUsed) / (1024 * 1024));
-        ImGui::Text("Render memory usage: %.2f MB", static_cast<double>(stats->rtMemoryUsed) / (1024 * 1024));
-        ImGui::Text("GPU vram usage: %.2f/%.2f MB", static_cast<double>(stats->gpuMemoryUsed) / (1024 * 1024), static_cast<double>(stats->gpuMemoryMax) / (1024 * 1024));
+        ImGui::Text("Texture memory usage: %.2f MB", toMB(static_cast<double>(stats->textureMemoryUsed)));
+        ImGui::Text("Render memory usage: %.2f MB", toMB(static_cast<double>(stats->rtMemoryUsed)));
+        ImGui::Text("GPU vram usage: %.2f/%.2f MB", toMB(static_cast<double>(stats->gpuMemoryUsed)),
+                    toMB(static_cast<double>(stats->gpuMemoryMax)));
 
         ImGui::SeparatorText("Counters");
 
@@ -147,17 +154,17 @@ namespace MiniEngine
 
         float projection[16];
         constexpr uint64_t state =
-              BGFX_STATE_WRITE_RGB
+            BGFX_STATE_WRITE_RGB
             | BGFX_STATE_WRITE_A
             | BGFX_STATE_MSAA
             | BGFX_STATE_BLEND_FUNC(
-                  BGFX_STATE_BLEND_SRC_ALPHA,
-                  BGFX_STATE_BLEND_INV_SRC_ALPHA
-              );
+                BGFX_STATE_BLEND_SRC_ALPHA,
+                BGFX_STATE_BLEND_INV_SRC_ALPHA
+            );
 
-        const float left   = drawData->DisplayPos.x;
-        const float right  = drawData->DisplayPos.x + drawData->DisplaySize.x;
-        const float top    = drawData->DisplayPos.y;
+        const float left = drawData->DisplayPos.x;
+        const float right = drawData->DisplayPos.x + drawData->DisplaySize.x;
+        const float top = drawData->DisplayPos.y;
         const float bottom = drawData->DisplayPos.y + drawData->DisplaySize.y;
 
         bx::mtxOrtho(
@@ -222,7 +229,9 @@ namespace MiniEngine
             {
                 if (cmd.UserCallback != nullptr)
                 {
-                    if (cmd.UserCallback == ImDrawCallback_ResetRenderState) {}
+                    if (cmd.UserCallback == ImDrawCallback_ResetRenderState)
+                    {
+                    }
                     else
                         cmd.UserCallback(drawList, &cmd);
 
@@ -230,7 +239,7 @@ namespace MiniEngine
                 }
 
                 const ImVec2 clipOffset = drawData->DisplayPos;
-                const ImVec2 clipScale  = drawData->FramebufferScale;
+                const ImVec2 clipScale = drawData->FramebufferScale;
 
                 float clipMinX =
                     (cmd.ClipRect.x - clipOffset.x) * clipScale.x;
@@ -297,6 +306,16 @@ namespace MiniEngine
 
         ImGui_ImplSDL3_Shutdown();
         ImGui::DestroyContext();
+    }
+
+    double DebugUI::toMs(const double frameTime, const double frameFreq)
+    {
+        return frameTime / frameFreq * 1000;
+    }
+
+    double DebugUI::toMB(const double memory)
+    {
+        return memory / (1024 * 1024);
     }
 
     uint16_t DebugUI::idx_program = BGFX_INVALID_HANDLE;

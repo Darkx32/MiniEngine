@@ -28,13 +28,14 @@ namespace MiniEngine
             Kinematic
         };
 
-        explicit RigidBody(const Transform& transform, BodyType bodyType = BodyType::Dynamic, ShapeType shapeType = ShapeType::Box);
+        explicit RigidBody(const Transform& transform, BodyType bodyType = BodyType::Dynamic,
+                           ShapeType shapeType = ShapeType::Box);
         ~RigidBody();
 
         void addForce(const Vector2& force) const;
         void setGravityScale(float gravity) const;
         [[nodiscard]] bool isValid() const;
-        [[nodiscard]] b2BodyId getId() const {return id;}
+        [[nodiscard]] b2BodyId getId() const { return id; }
 
     private:
         b2BodyId id{};

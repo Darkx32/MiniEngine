@@ -17,12 +17,13 @@ namespace
             constexpr float color[] = {0.0f, 0.0f, 0.0f, 1.0f};
             const uint16_t materialId = resourceManager->create<MiniEngine::Material>(color);
             entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID,
-                    materialId);
-            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic, MiniEngine::RigidBody::ShapeType::Box);
+                                                           materialId);
+            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic,
+                                                        MiniEngine::RigidBody::ShapeType::Box);
         }
+
         void update(float dt) override
         {
-
         }
     };
 
@@ -37,21 +38,23 @@ namespace
             transform.rotation.z = 20;
             const uint16_t materialId = resourceManager->create<MiniEngine::Material>();
             entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID,
-                    materialId);
+                                                           materialId);
             entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Static);
         }
+
         void update(float dt) override
         {
-
         }
     };
 }
 
-int main() {
+int main()
+{
     MiniEngine::Graphics::setClearColor(0x40afffFF);
     MiniEngine::Engine engine;
 
-    if (!engine.init("MiniEngine", {1280, 720})) {
+    if (!engine.init("MiniEngine", {1280, 720}))
+    {
         return 1;
     }
 

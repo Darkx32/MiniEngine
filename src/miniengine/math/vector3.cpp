@@ -21,49 +21,57 @@ namespace MiniEngine
         }
     }
 
-    const Vector3 Vector3::Zero  = {  0.0f,  0.0f, 0.0f };
-    const Vector3 Vector3::One   = {  1.0f,  1.0f, 1.0f };
-    const Vector3 Vector3::Up    = {  0.0f,  1.0f, 1.0f };
-    const Vector3 Vector3::Right = {  1.0f,  0.0f, 0.0f };
+    const Vector3 Vector3::Zero = {0.0f, 0.0f, 0.0f};
+    const Vector3 Vector3::One = {1.0f, 1.0f, 1.0f};
+    const Vector3 Vector3::Up = {0.0f, 1.0f, 1.0f};
+    const Vector3 Vector3::Right = {1.0f, 0.0f, 0.0f};
 
-    float Vector3::length() const {
+    float Vector3::length() const
+    {
         return std::sqrt(lengthSquared());
     }
 
-    float Vector3::lengthSquared() const {
+    float Vector3::lengthSquared() const
+    {
         return x * x + y * y + z * z;
     }
 
-    Vector3 Vector3::normalized() const {
+    Vector3 Vector3::normalized() const
+    {
         return toVector3(bx::normalize(toBx(*this)));
     }
 
-    void Vector3::normalize() {
+    void Vector3::normalize()
+    {
         *this = normalized();
     }
 
-    float Vector3::dot(const Vector3& rhs) const {
+    float Vector3::dot(const Vector3& rhs) const
+    {
         const auto vec3a = toBx(*this);
         const auto vec3b = toBx(rhs);
 
         return bx::dot(vec3a, vec3b);
     }
 
-    float Vector3::DistanceTo(const Vector3& rhs) const {
+    float Vector3::DistanceTo(const Vector3& rhs) const
+    {
         const auto vec3a = toBx(*this);
         const auto vec3b = toBx(rhs);
 
         return bx::distance(vec3a, vec3b);
     }
 
-    Vector3 Vector3::lerp(const Vector3& a, const Vector3& b, const float t) {
+    Vector3 Vector3::lerp(const Vector3& a, const Vector3& b, const float t)
+    {
         const auto vec3a = toBx(a);
         const auto vec3b = toBx(b);
 
         return toVector3(bx::lerp(vec3a, vec3b, t));
     }
 
-    Vector3 Vector3::Reflect(const Vector3& v, const Vector3& normal) {
+    Vector3 Vector3::Reflect(const Vector3& v, const Vector3& normal)
+    {
         const auto vec3a = toBx(v);
         const auto vec3b = toBx(normal);
 

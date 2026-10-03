@@ -16,7 +16,7 @@ namespace MiniEngine
         static void update(entt::registry* registry, float dt);
         static void shutdown();
 
-        static b2WorldId getWorldId() {return id;}
+        static b2WorldId getWorldId() { return id; }
 
     private:
         static b2WorldId id;

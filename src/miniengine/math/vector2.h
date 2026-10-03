@@ -7,13 +7,20 @@
 
 namespace MiniEngine
 {
-    struct Vector2 {
+    struct Vector2
+    {
         float x = 0.0f;
         float y = 0.0f;
 
         constexpr Vector2() = default;
-        constexpr Vector2(const float x, const float y) : x(x), y(y) {}
-        explicit constexpr Vector2(const float scalar) : x(scalar), y(scalar) {}
+
+        constexpr Vector2(const float x, const float y) : x(x), y(y)
+        {
+        }
+
+        explicit constexpr Vector2(const float scalar) : x(scalar), y(scalar)
+        {
+        }
 
         [[nodiscard]] const float* Data() const { return &x; }
         float* Data() { return &x; }
@@ -23,10 +30,33 @@ namespace MiniEngine
         Vector2 operator*(const float scalar) const { return {x * scalar, y * scalar}; }
         Vector2 operator/(const float scalar) const { return {x / scalar, y / scalar}; }
 
-        Vector2& operator+=(const Vector2& rhs) { x += rhs.x; y += rhs.y; return *this; }
-        Vector2& operator-=(const Vector2& rhs) { x -= rhs.x; y -= rhs.y; return *this; }
-        Vector2& operator*=(const float scalar) { x *= scalar; y *= scalar; return *this; }
-        Vector2& operator/=(const float scalar) { x /= scalar; y /= scalar; return *this; }
+        Vector2& operator+=(const Vector2& rhs)
+        {
+            x += rhs.x;
+            y += rhs.y;
+            return *this;
+        }
+
+        Vector2& operator-=(const Vector2& rhs)
+        {
+            x -= rhs.x;
+            y -= rhs.y;
+            return *this;
+        }
+
+        Vector2& operator*=(const float scalar)
+        {
+            x *= scalar;
+            y *= scalar;
+            return *this;
+        }
+
+        Vector2& operator/=(const float scalar)
+        {
+            x /= scalar;
+            y /= scalar;
+            return *this;
+        }
 
         Vector2 operator-() const { return {-x, -y}; }
 
@@ -50,7 +80,8 @@ namespace MiniEngine
         static const Vector2 Right;
     };
 
-    inline Vector2 operator*(float scalar, const Vector2& vec) {
+    inline Vector2 operator*(float scalar, const Vector2& vec)
+    {
         return vec * scalar;
     }
 }

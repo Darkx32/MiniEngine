@@ -7,7 +7,9 @@
 
 namespace MiniEngine
 {
-    Scene::Scene() : registry(new entt::registry) {}
+    Scene::Scene() : registry(new entt::registry)
+    {
+    }
 
     Scene::~Scene()
     {

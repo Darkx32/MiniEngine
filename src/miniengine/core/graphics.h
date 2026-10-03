@@ -28,6 +28,7 @@ namespace MiniEngine
 
     private:
         friend class Engine;
+
         struct InitData
         {
             ResourceManager* resourceManager;
@@ -36,6 +37,7 @@ namespace MiniEngine
             const uint32_t width;
             const uint32_t height;
         };
+
         static bool initializePrograms(const InitData& initData);
         static void shutdown();
         static void rendererComponentInit();

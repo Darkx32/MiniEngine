@@ -53,9 +53,9 @@ namespace MiniEngine
                 float model[16];
 
                 bx::mtxSRT(model,
-                transform.scale.x, transform.scale.y, transform.scale.z,
-                transform.rotation.x, transform.rotation.y, transform.rotation.z,
-                transform.position.x, transform.position.y, transform.position.z);
+                           transform.scale.x, transform.scale.y, transform.scale.z,
+                           transform.rotation.x, transform.rotation.y, transform.rotation.z,
+                           transform.position.x, transform.position.y, transform.position.z);
 
                 bgfx::setTransform(model);
 

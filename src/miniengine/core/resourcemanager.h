@@ -19,7 +19,8 @@ namespace MiniEngine
     {
         virtual ~IResource() = default;
     };
-    template<typename T>
+
+    template <typename T>
     concept Resource = std::derived_from<T, IResource>;
 
     class ResourceManager
@@ -43,10 +44,11 @@ namespace MiniEngine
             clean();
         }
 
-        template<Resource T, typename... Args>
+        template <Resource T, typename... Args>
         uint16_t create(Args&&... args)
         {
-            if (order.size() >= capacity) {
+            if (order.size() >= capacity)
+            {
                 evictOldest();
             }
 
@@ -61,7 +63,7 @@ namespace MiniEngine
             return id;
         }
 
-        template<Resource T>
+        template <Resource T>
         T* get(const uint16_t id)
         {
             const auto it = resources.find(id);
@@ -78,7 +80,8 @@ namespace MiniEngine
             return resource;
         }
 
-        bool destroy(const uint16_t id) {
+        bool destroy(const uint16_t id)
+        {
             const auto it = resources.find(id);
             if (it == resources.end()) return false;
 
@@ -95,7 +98,8 @@ namespace MiniEngine
 
             freeIds.clear();
             freeIds.reserve(capacity);
-            for (size_t i = capacity; i >= 1; --i) {
+            for (size_t i = capacity; i >= 1; --i)
+            {
                 freeIds.push_back(static_cast<uint16_t>(i));
             }
         }
@@ -109,7 +113,9 @@ namespace MiniEngine
             uint16_t id;
             std::unique_ptr<IResource> resource;
         };
-        void evictOldest() {
+
+        void evictOldest()
+        {
             const uint16_t oldestId = order.back().id;
             order.pop_back();
             resources.erase(oldestId);

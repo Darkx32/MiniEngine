@@ -19,6 +19,7 @@ namespace MiniEngine
             Vector3 vector3;
 
             static bgfx::VertexLayout ms_layout;
+
             static void init()
             {
                 ms_layout.begin()
@@ -27,6 +28,7 @@ namespace MiniEngine
             }
         };
     }
+
     bgfx::VertexLayout PosColorVertex::ms_layout;
 
     Material::Material() : color{1.0f, 1.0f, 1.0f, 1.0f}
@@ -57,10 +59,10 @@ namespace MiniEngine
     QuadPrimitive::QuadPrimitive()
     {
         static PosColorVertex s_vertices[] = {
-            {.vector3 = {-0.5f,  0.5f, 0.0f} },
-            {.vector3 = {0.5f,  0.5f, 0.0f} },
-            {.vector3 = {0.5f, -0.5f, 0.0f} },
-            {.vector3 = {-0.5f, -0.5f, 0.0f} },
+            {.vector3 = {-0.5f, 0.5f, 0.0f}},
+            {.vector3 = {0.5f, 0.5f, 0.0f}},
+            {.vector3 = {0.5f, -0.5f, 0.0f}},
+            {.vector3 = {-0.5f, -0.5f, 0.0f}},
         };
 
         static const uint16_t s_indices[] = {
@@ -144,7 +146,8 @@ namespace MiniEngine
                     bx::cos(angle),
                     bx::sin(angle),
                     0.0f
-                }});
+                }
+            });
 
             indices.push_back(0);
             indices.push_back((i + 1) % segments + 1);
@@ -217,16 +220,16 @@ namespace MiniEngine
         const float halfHeight = windowSize.y / (2.0f * zoom);
 
         bx::mtxOrtho(
-        proj,-halfWidth,halfWidth,
-         -halfHeight,halfHeight,
-        -100.0f,100.0f, 0.0f,bgfx::getCaps()->homogeneousDepth);
+            proj, -halfWidth, halfWidth,
+            -halfHeight, halfHeight,
+            -100.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
     }
 
     void Camera2D::updateView(const Transform& transform)
     {
         bx::mtxLookAt(view,
-    {transform.position.x, transform.position.y, 1.0f},
-    {transform.position.x, transform.position.y, 0.0f});
+                      {transform.position.x, transform.position.y, 1.0f},
+                      {transform.position.x, transform.position.y, 0.0f});
     }
 
     void Graphics::rendererComponentInit()

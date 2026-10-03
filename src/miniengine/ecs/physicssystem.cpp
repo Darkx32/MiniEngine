@@ -25,16 +25,16 @@ namespace MiniEngine
 
         registry->view<Transform, const RigidBody>().each(
             [](Transform& transform, const RigidBody& rigidbody)
-        {
-            const auto id = rigidbody.getId();
+            {
+                const auto id = rigidbody.getId();
 
-            const auto [x, y] = b2Body_GetPosition(id);
-            const auto rotation = b2Body_GetRotation(id);
+                const auto [x, y] = b2Body_GetPosition(id);
+                const auto rotation = b2Body_GetRotation(id);
 
-            transform.position.x = x;
-            transform.position.y = y;
-            transform.rotation.z = -b2Rot_GetAngle(rotation);
-        });
+                transform.position.x = x;
+                transform.position.y = y;
+                transform.rotation.z = -b2Rot_GetAngle(rotation);
+            });
     }
 
     void PhysicsSystem::shutdown()

@@ -4,11 +4,13 @@
 
 #include "core/window.h"
 
-namespace MiniEngine {
+namespace MiniEngine
+{
     class ResourceManager;
     class Scene;
 
-    class Engine {
+    class Engine
+    {
     public:
         Engine();
         ~Engine();
@@ -30,5 +32,4 @@ namespace MiniEngine {
 
         Window* window;
     };
-
 } // namespace miniengine

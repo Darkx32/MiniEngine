@@ -13,10 +13,10 @@ namespace MiniEngine
         registry->view<ScriptComponent>().each(
             [](const ScriptComponent& scriptComponent)
             {
-               for (auto& script : scriptComponent.scripts)
-               {
-                   script->startup();
-               }
+                for (auto& script : scriptComponent.scripts)
+                {
+                    script->startup();
+                }
             });
     }
 
@@ -25,10 +25,10 @@ namespace MiniEngine
         registry->view<ScriptComponent>().each(
             [dt](const ScriptComponent& scriptComponent)
             {
-               for (auto& script : scriptComponent.scripts)
-               {
-                   script->update(dt);
-               }
+                for (auto& script : scriptComponent.scripts)
+                {
+                    script->update(dt);
+                }
             });
     }
 } // MiniEngine

@@ -47,8 +47,13 @@ namespace MiniEngine
         Vector3 scale;
         Vector3 rotation;
 
-        Transform() : position(Vector3::Zero), scale(Vector3::One), rotation(Vector3::Zero) {}
-        Transform(const Vector3 pos, const Vector3 s, const Vector3 euler) : position(pos), scale(s), rotation(euler) {}
+        Transform() : position(Vector3::Zero), scale(Vector3::One), rotation(Vector3::Zero)
+        {
+        }
+
+        Transform(const Vector3 pos, const Vector3 s, const Vector3 euler) : position(pos), scale(s), rotation(euler)
+        {
+        }
     };
 
     class Entity

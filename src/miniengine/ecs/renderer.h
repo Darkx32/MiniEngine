@@ -17,7 +17,7 @@ namespace MiniEngine
         uint16_t ibh_idx = 0xFFFF;
         uint16_t program_idx = 0xFFFF;
 
-        uint16_t ucolor_idx= 0xFFFF;
+        uint16_t ucolor_idx = 0xFFFF;
     };
 
     struct Material : IResource
@@ -56,7 +56,10 @@ namespace MiniEngine
 
     struct MeshRenderer
     {
-        explicit MeshRenderer(const uint16_t mesh, const uint16_t material) : meshData(mesh), material(material) {}
+        explicit MeshRenderer(const uint16_t mesh, const uint16_t material) : meshData(mesh), material(material)
+        {
+        }
+
         const uint16_t meshData = 0xFFFF;
         const uint16_t material = 0xFFFF;
     };
