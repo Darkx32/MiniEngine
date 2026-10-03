@@ -6,8 +6,6 @@
 
 #include <cmath>
 
-#include "bx/math.h"
-
 namespace MiniEngine
 {
     namespace

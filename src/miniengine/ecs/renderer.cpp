@@ -5,13 +5,10 @@
 
 #include "miniengine_shaders.hpp"
 #include "miniengine/math/vector3.h"
-
-#include "entity.h"
-#include "bgfx/bgfx.h"
-#include "bx/math.h"
 #include "miniengine/core/graphics.h"
 #include "miniengine/math/vector2.h"
-#include "spdlog/spdlog.h"
+#include "entity.h"
+
 
 namespace MiniEngine
 {

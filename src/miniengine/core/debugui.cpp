@@ -8,11 +8,9 @@
 
 #include "graphics.h"
 #include "miniengine_shaders.hpp"
-#include "SDL3/SDL.h"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl3.h"
-#include "bgfx/bgfx.h"
-#include "bx/math.h"
+#include "../pch.h"
 
 namespace MiniEngine
 {

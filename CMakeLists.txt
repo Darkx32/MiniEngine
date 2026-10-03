@@ -238,6 +238,9 @@ target_include_directories(miniengine PRIVATE
     "${IMGUI_DIR}"
 )
 
+# Precompiled header
+target_precompile_headers(miniengine PRIVATE src/miniengine/pch.h)
+
 # Link all requested libraries
 target_link_libraries(miniengine PRIVATE
     bgfx

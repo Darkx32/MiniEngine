@@ -5,7 +5,6 @@
 #include "scriptsystem.h"
 
 #include "entity.h"
-#include "entt/entt.hpp"
 
 namespace MiniEngine
 {

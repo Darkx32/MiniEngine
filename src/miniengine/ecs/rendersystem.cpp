@@ -6,9 +6,6 @@
 
 #include "entity.h"
 #include "renderer.h"
-#include "bgfx/bgfx.h"
-#include "bx/math.h"
-#include "entt/entt.hpp"
 #include "miniengine/core/graphics.h"
 
 namespace MiniEngine

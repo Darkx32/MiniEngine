@@ -5,8 +5,6 @@
 #include "window.h"
 
 #include "debugui.h"
-#include "SDL3/SDL_init.h"
-#include "spdlog/spdlog.h"
 
 namespace MiniEngine
 {

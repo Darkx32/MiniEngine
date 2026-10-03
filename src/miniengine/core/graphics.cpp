@@ -5,10 +5,9 @@
 #include "graphics.h"
 
 #include "resourcemanager.h"
-#include "bgfx/bgfx.h"
 #include "miniengine/Engine.h"
 #include "miniengine/ecs/renderer.h"
-#include "spdlog/spdlog.h"
+#include "../pch.h"
 
 namespace MiniEngine
 {

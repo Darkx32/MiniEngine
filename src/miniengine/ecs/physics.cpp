@@ -6,7 +6,6 @@
 
 #include "entity.h"
 #include "physicssystem.h"
-#include "box2d/box2d.h"
 #include "miniengine/math/vector2.h"
 
 namespace MiniEngine

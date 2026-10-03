@@ -6,8 +6,6 @@
 
 #include "entity.h"
 #include "physics.h"
-#include "box2d/box2d.h"
-#include "entt/entity/registry.hpp"
 
 namespace MiniEngine
 {
