@@ -22,11 +22,11 @@ namespace MiniEngine
 
     struct Material : IResource
     {
-        float color[4];
+        std::array<float, 4> color{1.0f, 1.0f, 1.0f, 1.0f};
         uint16_t texture;
 
         Material();
-        explicit Material(const float* c);
+        explicit Material(std::array<float, 4> c);
         explicit Material(const char* filepath);
         ~Material() override;
     };

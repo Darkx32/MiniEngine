@@ -59,7 +59,7 @@ namespace MiniEngine
 
                 bgfx::setTransform(model);
 
-                bgfx::setUniform(color, p_material->color);
+                bgfx::setUniform(color, p_material->color.data());
 
                 bgfx::setVertexBuffer(0, vbh);
                 bgfx::setIndexBuffer(ibh);

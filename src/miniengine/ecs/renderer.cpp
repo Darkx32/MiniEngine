@@ -36,9 +36,9 @@ namespace MiniEngine
         texture = BGFX_INVALID_HANDLE;
     }
 
-    Material::Material(const float* c) : color{}
+    Material::Material(const std::array<float, 4> c) : color{}
     {
-        std::copy(c, std::next(c, 3), color);
+        color = c;
         texture = BGFX_INVALID_HANDLE;
     }
 

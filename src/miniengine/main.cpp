@@ -7,50 +7,40 @@
 
 namespace
 {
-    class Player : public MiniEngine::IScript
+    class SunScript : public MiniEngine::IScript
     {
     public:
         void startup() override
         {
+            materialID = resourceManager->create<MiniEngine::Material>();
+            auto* material = resourceManager->get<MiniEngine::Material>(materialID);
+            material->color = {1.0f, 1.0f, 0.0f, 0.0f};
+
             auto& transform = entity->getComponent<MiniEngine::Transform>();
-            transform.scale = {100, 100, 0.0f};
-            constexpr float color[] = {0.0f, 0.0f, 0.0f, 1.0f};
-            const uint16_t materialId = resourceManager->create<MiniEngine::Material>(color);
-            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID,
-                                                           materialId);
-            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Dynamic,
-                                                        MiniEngine::RigidBody::ShapeType::Box);
+
+            transform.scale.x = transform.scale.y = 50;
+
+            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::CirclePrimitiveID, materialID);
+            auto& rb = entity->addComponent<MiniEngine::RigidBody>(transform);
+
+            auto collider = rb.getCollider();
+            collider.type = MiniEngine::ShapeType::Circle;
+            rb.setCollider(collider, transform);
+            rb.setGravityScale(0.0f);
         }
 
         void update(float dt) override
         {
         }
-    };
 
-    class Ground : public MiniEngine::IScript
-    {
-    public:
-        void startup() override
-        {
-            auto& transform = entity->getComponent<MiniEngine::Transform>();
-            transform.position = {0, -300, 1};
-            transform.scale = {400, 50, 1};
-            transform.rotation.z = 20;
-            const uint16_t materialId = resourceManager->create<MiniEngine::Material>();
-            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID,
-                                                           materialId);
-            entity->addComponent<MiniEngine::RigidBody>(transform, MiniEngine::RigidBody::BodyType::Static);
-        }
-
-        void update(float dt) override
-        {
-        }
+    private:
+        uint16_t materialID = 0xFFFF;
     };
 }
 
 int main()
 {
-    MiniEngine::Graphics::setClearColor(0x40afffFF);
+    MiniEngine::Graphics::setClearColor(0x000000FF);
     MiniEngine::Engine engine;
 
     if (!engine.init("MiniEngine", {1280, 720}))
@@ -59,14 +49,11 @@ int main()
     }
 
     MiniEngine::Scene scene;
-    auto ground = scene.createEntity();
-    ground.addScript(std::make_unique<Ground>());
-
-    auto entity = scene.createEntity();
     auto camera = scene.createEntity();
-
     camera.addComponent<MiniEngine::Camera2D>();
-    entity.addScript(std::make_unique<Player>());
+
+    auto sun = scene.createEntity();
+    sun.addScript(std::make_unique<SunScript>());
 
     engine.setScene(&scene);
 
