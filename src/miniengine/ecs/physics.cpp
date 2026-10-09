@@ -35,6 +35,11 @@ namespace MiniEngine
         b2Body_ApplyForceToCenter(id, {.x = force.x, .y = force.y}, true);
     }
 
+    void RigidBody::setLinearVelocity(const Vector2& linear) const
+    {
+        b2Body_SetLinearVelocity(id, {.x = linear.x, .y = linear.y});
+    }
+
     void RigidBody::setMass(const float mass) const
     {
         const b2MassData massData = b2Body_GetMassData(id);

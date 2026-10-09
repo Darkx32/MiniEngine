@@ -54,7 +54,7 @@ namespace MiniEngine
         return bx::dot(vec3a, vec3b);
     }
 
-    float Vector3::DistanceTo(const Vector3& rhs) const
+    float Vector3::distanceTo(const Vector3& rhs) const
     {
         const auto vec3a = toBx(*this);
         const auto vec3b = toBx(rhs);
@@ -70,7 +70,7 @@ namespace MiniEngine
         return toVector3(bx::lerp(vec3a, vec3b, t));
     }
 
-    Vector3 Vector3::Reflect(const Vector3& v, const Vector3& normal)
+    Vector3 Vector3::reflect(const Vector3& v, const Vector3& normal)
     {
         const auto vec3a = toBx(v);
         const auto vec3b = toBx(normal);

@@ -220,8 +220,8 @@ namespace MiniEngine
         const float halfHeight = windowSize.y / (2.0f * zoom);
 
         bx::mtxOrtho(
-            proj, -halfWidth, halfWidth,
-            -halfHeight, halfHeight,
+            proj, halfWidth, -halfWidth,
+            halfHeight, -halfHeight,
             -100.0f, 100.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
     }
 

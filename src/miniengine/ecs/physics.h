@@ -46,6 +46,7 @@ namespace MiniEngine
         RigidBody& operator=(const RigidBody&) = delete;
 
         void addForce(const Vector2& force) const;
+        void setLinearVelocity(const Vector2& linear) const;
         void setMass(float mass) const;
         [[nodiscard]] float getMass() const;
         void setGravityScale(float gravity) const;

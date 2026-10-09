@@ -4,13 +4,10 @@
 
 #ifndef MINIENGINE_SCENE_H
 #define MINIENGINE_SCENE_H
-
-#include <entt/fwd.hpp>
+#include "miniengine/ecs/entity.h"
 
 namespace MiniEngine
 {
-    class Entity;
-
     class Scene
     {
     public:
@@ -18,6 +15,19 @@ namespace MiniEngine
         ~Scene();
 
         [[nodiscard]] Entity createEntity();
+
+        template <typename... Components>
+        [[nodiscard]] std::vector<Entity> getAllEntitiesWithComponents()
+        {
+            std::vector<Entity> entities;
+
+            for (auto view = registry->view<Components...>(); auto handle : view)
+            {
+                entities.push_back(Entity(handle, this, registry));
+            }
+
+            return entities;
+        }
 
     private:
         friend class Engine;

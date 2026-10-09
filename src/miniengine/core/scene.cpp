@@ -19,6 +19,6 @@ namespace MiniEngine
     Entity Scene::createEntity()
     {
         const entt::entity entity = registry->create();
-        return Entity(entity, this);
+        return Entity(entity, this, registry);
     }
 } // MiniEngine

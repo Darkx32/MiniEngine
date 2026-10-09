@@ -7,12 +7,13 @@
 
 #include "entt/entt.hpp"
 #include "miniengine/core/resourcemanager.h"
-#include "miniengine/core/scene.h"
 #include "miniengine/math/vector3.h"
 
 namespace MiniEngine
 {
     class ResourceManager;
+    class Scene;
+    class Entity;
 
     class IScript
     {
@@ -61,6 +62,8 @@ namespace MiniEngine
     public:
         Entity() = default;
 
+        [[nodiscard]] Scene* getScene() const { return p_scene; }
+
         void addScript(std::unique_ptr<IScript> script)
         {
             script->entity = this;
@@ -75,34 +78,35 @@ namespace MiniEngine
         T& addComponent(Args&&... args)
         {
             static_assert(!std::is_base_of_v<IScript, T>, "Scripts must be added using addScript()");
-            return p_scene->registry->emplace<T>(m_entity, std::forward<Args>(args)...);
+            return p_registry->emplace<T>(m_entity, std::forward<Args>(args)...);
         }
 
         template <typename T>
         void removeComponent() const
         {
-            p_scene->registry->remove<T>(m_entity);
+            p_registry->remove<T>(m_entity);
         }
 
         template <typename T>
         T& getComponent()
         {
             assert(hasComponent<T>() && "Entity does not have that component");
-            return p_scene->registry->get<T>(m_entity);
+            return p_registry->get<T>(m_entity);
         }
 
         template <typename T>
         [[nodiscard]] bool hasComponent() const
         {
-            return p_scene->registry->all_of<T>(m_entity);
+            return p_registry->all_of<T>(m_entity);
         }
 
     private:
         friend class Scene;
-        explicit Entity(entt::entity entity, Scene* scene);
+        explicit Entity(entt::entity entity, Scene* scene, entt::registry* registry);
 
         entt::entity m_entity{0};
         Scene* p_scene{};
+        entt::registry* p_registry{};
     };
 } // MiniEngine
 

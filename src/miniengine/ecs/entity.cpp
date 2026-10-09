@@ -6,12 +6,15 @@
 
 namespace MiniEngine
 {
-    Entity::Entity(const entt::entity entity, Scene* scene)
+    Entity::Entity(const entt::entity entity, Scene* scene, entt::registry* registry)
     {
         m_entity = entity;
         p_scene = scene;
+        p_registry = registry;
 
-        addComponent<Transform>();
-        addComponent<ScriptComponent>();
+        if (!hasComponent<Transform>())
+            addComponent<Transform>();
+        if (!hasComponent<ScriptComponent>())
+            addComponent<ScriptComponent>();
     }
 } // MiniEngine

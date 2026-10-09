@@ -70,10 +70,10 @@ namespace MiniEngine
         void normalize();
 
         [[nodiscard]] float dot(const Vector3& rhs) const;
-        [[nodiscard]] float DistanceTo(const Vector3& rhs) const;
+        [[nodiscard]] float distanceTo(const Vector3& rhs) const;
 
         static Vector3 lerp(const Vector3& a, const Vector3& b, float t);
-        static Vector3 Reflect(const Vector3& v, const Vector3& normal);
+        static Vector3 reflect(const Vector3& v, const Vector3& normal);
 
         static const Vector3 Zero;
         static const Vector3 One;
