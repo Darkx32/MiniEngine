@@ -4,7 +4,6 @@
 
 #ifndef MINIENGINE_RENDERSYSTEM_H
 #define MINIENGINE_RENDERSYSTEM_H
-#include <entt/fwd.hpp>
 
 namespace MiniEngine
 {

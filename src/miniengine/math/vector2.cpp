@@ -44,7 +44,7 @@ namespace MiniEngine
         return x * rhs.x + y * rhs.y;
     }
 
-    float Vector2::DistanceTo(const Vector2& rhs) const
+    float Vector2::distanceTo(const Vector2& rhs) const
     {
         return (*this - rhs).length();
     }
@@ -57,7 +57,7 @@ namespace MiniEngine
         };
     }
 
-    Vector2 Vector2::Reflect(const Vector2& v, const Vector2& normal)
+    Vector2 Vector2::reflect(const Vector2& v, const Vector2& normal)
     {
         return v - normal * (2.0f * v.dot(normal));
     }

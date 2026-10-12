@@ -5,6 +5,7 @@
 #include "rendersystem.h"
 
 #include "entity.h"
+#include "lightsystem.h"
 #include "renderer.h"
 #include "miniengine/core/graphics.h"
 
@@ -39,16 +40,17 @@ namespace MiniEngine
         bgfx::touch(Graphics::DEFAULT);
 
         registry->view<const Transform, const MeshRenderer>().each(
-            [](const Transform& transform, const MeshRenderer& mesh)
+            [&registry](const Transform& transform, const MeshRenderer& mesh)
             {
                 auto& resourceManager = ResourceManager::get();
                 const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshData);
+                const auto* p_shaderData = resourceManager.get<ShaderData>(p_meshData->shaderData);
                 const auto& p_material = resourceManager.get<Material>(mesh.material);
 
                 const bgfx::VertexBufferHandle vbh = {p_meshData->vbh_idx};
                 const bgfx::IndexBufferHandle ibh = {p_meshData->ibh_idx};
-                const bgfx::ProgramHandle program = {p_meshData->program_idx};
-                const bgfx::UniformHandle color = {p_meshData->ucolor_idx};
+                const bgfx::ProgramHandle program = {p_shaderData->program_idx};
+                const bgfx::UniformHandle color = {p_shaderData->ucolor_idx};
 
                 float model[16];
 
@@ -59,6 +61,7 @@ namespace MiniEngine
 
                 bgfx::setTransform(model);
 
+                LightSystem::prepare(registry, *p_shaderData);
                 bgfx::setUniform(color, p_material->color.data());
 
                 bgfx::setVertexBuffer(0, vbh);

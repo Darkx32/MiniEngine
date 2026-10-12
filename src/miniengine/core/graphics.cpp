@@ -115,6 +115,7 @@ namespace MiniEngine
         bgfx::setViewRect(DEFAULT, 0, 0, static_cast<uint16_t>(initData.width), static_cast<uint16_t>(initData.height));
 
         rendererComponentInit();
+        DefaultShaderID = initData.resourceManager->create<ShaderData>();
         QuadPrimitiveID = initData.resourceManager->create<QuadPrimitive>();
         CirclePrimitiveID = initData.resourceManager->create<CirclePrimitive>();
 
@@ -129,4 +130,5 @@ namespace MiniEngine
     uint32_t Graphics::color = 0x000000FF;
     uint16_t Graphics::QuadPrimitiveID = 0xFFFF;
     uint16_t Graphics::CirclePrimitiveID = 0xFFFF;
+    uint16_t Graphics::DefaultShaderID = 0xFFFF;
 } // MiniAudio

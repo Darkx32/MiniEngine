@@ -8,6 +8,7 @@
 #include "miniengine/core/graphics.h"
 #include "miniengine/math/vector2.h"
 #include "entity.h"
+#include "lightsystem.h"
 
 
 namespace MiniEngine
@@ -31,18 +32,85 @@ namespace MiniEngine
 
     bgfx::VertexLayout PosColorVertex::ms_layout;
 
-    Material::Material() : color{1.0f, 1.0f, 1.0f, 1.0f}
+    ShaderData::ShaderData()
+    {
+        const auto [idx] = Shaders::createProgram(
+            "vs_simple",
+            "fs_simple"
+        );
+
+        program_idx = idx;
+
+        ucolor_idx = bgfx::createUniform(
+            "u_color",
+            bgfx::UniformType::Vec4
+        ).idx;
+
+        ulightPositions_idx = bgfx::createUniform(
+            "u_lightPositions",
+            bgfx::UniformType::Vec4,
+            LightSystem::MAX_LIGHTS
+        ).idx;
+
+        ulightColors_idx = bgfx::createUniform(
+            "u_lightColors",
+            bgfx::UniformType::Vec4,
+            LightSystem::MAX_LIGHTS
+        ).idx;
+
+        ulightParams_idx = bgfx::createUniform(
+            "u_lightParams",
+            bgfx::UniformType::Vec4,
+            LightSystem::MAX_LIGHTS
+        ).idx;
+
+        ulightCount_idx = bgfx::createUniform(
+            "u_lightCount",
+            bgfx::UniformType::Vec4
+        ).idx;
+
+        uambientColor_idx = bgfx::createUniform(
+            "u_ambientColor",
+            bgfx::UniformType::Vec4
+        ).idx;
+    }
+
+    ShaderData::~ShaderData()
+    {
+        if (program_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::ProgramHandle{program_idx});
+
+        if (ucolor_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ucolor_idx});
+
+        if (ulightPositions_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ulightPositions_idx});
+
+        if (ulightColors_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ulightColors_idx});
+
+        if (ulightParams_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ulightParams_idx});
+
+        if (ulightCount_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ulightCount_idx});
+
+        if (uambientColor_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{uambientColor_idx});
+    }
+
+    Material::Material()
     {
         texture = BGFX_INVALID_HANDLE;
     }
 
-    Material::Material(const std::array<float, 4> c) : color{}
+    Material::Material(const std::array<float, 4> c)
     {
         color = c;
         texture = BGFX_INVALID_HANDLE;
     }
 
-    Material::Material(const char* filepath) : color{1.0f, 1.0f, 1.0f, 1.0f}
+    Material::Material(const char* filepath)
     {
         // Create texture using image from filepath
         texture = BGFX_INVALID_HANDLE;
@@ -77,31 +145,16 @@ namespace MiniEngine
         const auto ibh = bgfx::createIndexBuffer(
             bgfx::makeRef(s_indices, sizeof(s_indices)));
 
-        const auto program = MiniEngine::Shaders::createProgram("vs_simple", "fs_simple");
-
-        const auto color = bgfx::createUniform("u_color", bgfx::UniformType::Vec4);
-
         if (!bgfx::isValid(vbh) || !bgfx::isValid(ibh))
         {
             spdlog::error("Error to create vertices and indices for quad primitive");
             vbh_idx = BGFX_INVALID_HANDLE;
             ibh_idx = BGFX_INVALID_HANDLE;
         }
-        else if (!bgfx::isValid(program))
-        {
-            spdlog::error("Error to create shader program for quad primitive");
-            program_idx = BGFX_INVALID_HANDLE;
-        }
-        else if (!bgfx::isValid(color))
-        {
-            spdlog::error("Error to create color uniform for quad primitive");
-            ucolor_idx = BGFX_INVALID_HANDLE;
-        }
 
         vbh_idx = vbh.idx;
         ibh_idx = ibh.idx;
-        program_idx = program.idx;
-        ucolor_idx = color.idx;
+        shaderData = Graphics::DefaultShaderID;
     }
 
     QuadPrimitive::~QuadPrimitive()
@@ -115,16 +168,6 @@ namespace MiniEngine
         {
             bgfx::destroy(bgfx::IndexBufferHandle{ibh_idx});
             ibh_idx = BGFX_INVALID_HANDLE;
-        }
-        if (bgfx::isValid(bgfx::ProgramHandle{program_idx}))
-        {
-            bgfx::destroy(bgfx::ProgramHandle{program_idx});
-            program_idx = BGFX_INVALID_HANDLE;
-        }
-        if (bgfx::isValid(bgfx::UniformHandle{ucolor_idx}))
-        {
-            bgfx::destroy(bgfx::UniformHandle{ucolor_idx});
-            ucolor_idx = BGFX_INVALID_HANDLE;
         }
     }
 
@@ -163,31 +206,16 @@ namespace MiniEngine
         const auto ibh = bgfx::createIndexBuffer(
             bgfx::copy(indices.data(), sizeof(uint16_t) * indices.size()));
 
-        const auto program = MiniEngine::Shaders::createProgram("vs_simple", "fs_simple");
-
-        const auto color = bgfx::createUniform("u_color", bgfx::UniformType::Vec4);
-
         if (!bgfx::isValid(vbh) || !bgfx::isValid(ibh))
         {
             spdlog::error("Error to create vertices and indices for quad primitive");
             vbh_idx = BGFX_INVALID_HANDLE;
             ibh_idx = BGFX_INVALID_HANDLE;
         }
-        else if (!bgfx::isValid(program))
-        {
-            spdlog::error("Error to create shader program for quad primitive");
-            program_idx = BGFX_INVALID_HANDLE;
-        }
-        else if (!bgfx::isValid(color))
-        {
-            spdlog::error("Error to create color uniform for quad primitive");
-            ucolor_idx = BGFX_INVALID_HANDLE;
-        }
 
         vbh_idx = vbh.idx;
         ibh_idx = ibh.idx;
-        program_idx = program.idx;
-        ucolor_idx = color.idx;
+        shaderData = Graphics::DefaultShaderID;
     }
 
     CirclePrimitive::~CirclePrimitive()
@@ -201,16 +229,6 @@ namespace MiniEngine
         {
             bgfx::destroy(bgfx::IndexBufferHandle{ibh_idx});
             ibh_idx = BGFX_INVALID_HANDLE;
-        }
-        if (bgfx::isValid(bgfx::ProgramHandle{program_idx}))
-        {
-            bgfx::destroy(bgfx::ProgramHandle{program_idx});
-            program_idx = BGFX_INVALID_HANDLE;
-        }
-        if (bgfx::isValid(bgfx::UniformHandle{ucolor_idx}))
-        {
-            bgfx::destroy(bgfx::UniformHandle{ucolor_idx});
-            ucolor_idx = BGFX_INVALID_HANDLE;
         }
     }
 

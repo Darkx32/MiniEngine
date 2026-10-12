@@ -1,0 +1,20 @@
+//
+// Created by matheus on 12/10/2026.
+//
+
+#ifndef MINIENGINE_LIGHTSYSTEM_H
+#define MINIENGINE_LIGHTSYSTEM_H
+
+namespace MiniEngine
+{
+    struct ShaderData;
+
+    struct LightSystem
+    {
+        static void prepare(entt::registry* registry, const ShaderData& shaderData);
+
+        static constexpr uint16_t MAX_LIGHTS = 16;
+    };
+} // MiniEngine
+
+#endif //MINIENGINE_LIGHTSYSTEM_H

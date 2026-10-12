@@ -25,6 +25,7 @@ namespace MiniEngine
 
         static uint16_t QuadPrimitiveID;
         static uint16_t CirclePrimitiveID;
+        static uint16_t DefaultShaderID;
 
     private:
         friend class Engine;

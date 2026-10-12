@@ -2,6 +2,7 @@
 #include "core/graphics.h"
 #include "core/scene.h"
 #include "ecs/entity.h"
+#include "ecs/lights.h"
 #include "ecs/physics.h"
 #include "ecs/renderer.h"
 
@@ -20,6 +21,7 @@ namespace
             transform.scale.x = transform.scale.y = 50;
 
             entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::CirclePrimitiveID, materialID);
+            entity->addComponent<MiniEngine::PointLight2D>();
             auto& rb = entity->addComponent<MiniEngine::RigidBody>(transform);
 
             auto collider = rb.getCollider();
@@ -58,7 +60,7 @@ namespace
             rb.setCollider(collider, transform);
             rb.setGravityScale(0.0f);
             rb.setMass(4);
-            rb.setLinearVelocity({0.0f, 32.5});
+            rb.setLinearVelocity({0.0f, 42.5f});
         }
 
         void update(float dt) override

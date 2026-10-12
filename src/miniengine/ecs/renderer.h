@@ -11,13 +11,28 @@ namespace MiniEngine
     struct Transform;
     struct Vector2;
 
+    struct ShaderData : IResource
+    {
+        uint16_t program_idx = 0xFFFF;
+
+        uint16_t ucolor_idx = 0xFFFF;
+
+        uint16_t ulightPositions_idx = 0xFFFF;
+        uint16_t ulightColors_idx = 0xFFFF;
+        uint16_t ulightParams_idx = 0xFFFF;
+        uint16_t ulightCount_idx = 0xFFFF;
+        uint16_t uambientColor_idx = 0xFFFF;
+
+        ShaderData();
+        ~ShaderData() override;
+    };
+
     struct MeshData : IResource
     {
         uint16_t vbh_idx = 0xFFFF;
         uint16_t ibh_idx = 0xFFFF;
-        uint16_t program_idx = 0xFFFF;
 
-        uint16_t ucolor_idx = 0xFFFF;
+        uint16_t shaderData = 0xFFFF;
     };
 
     struct Material : IResource
