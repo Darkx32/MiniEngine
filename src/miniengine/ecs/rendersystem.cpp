@@ -13,7 +13,8 @@ namespace MiniEngine
 {
     void RenderSystem::calculate(entt::registry* registry, const Vector2& windowSize)
     {
-        if (const auto registryView = registry->view<Transform, Camera2D>(); registryView.begin() != registryView.end())
+        if (const auto registryView = registry->view<const Transform, Camera2D>(); registryView.begin() != registryView.
+            end())
         {
             const auto entity = *registryView.begin();
 
@@ -26,7 +27,8 @@ namespace MiniEngine
 
     void RenderSystem::render(entt::registry* registry)
     {
-        if (const auto registryView = registry->view<Transform, Camera2D>(); registryView.begin() != registryView.end())
+        if (const auto registryView = registry->view<const Transform, Camera2D>(); registryView.begin() != registryView.
+            end())
         {
             const auto entity = *registryView.begin();
 

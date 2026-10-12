@@ -13,16 +13,18 @@ namespace MiniEngine
     void LightSystem::prepare(entt::registry* registry, const ShaderData& shaderData)
     {
         uint16_t index = 0;
-        float positions[MAX_LIGHTS][4] = {};
-        float colors[MAX_LIGHTS][4] = {};
-        float params[MAX_LIGHTS][4] = {};
+        std::array<std::array<float, MAX_LIGHTS>, 4> positions = {};
+        std::array<std::array<float, MAX_LIGHTS>, 4> colors = {};
+        std::array<std::array<float, MAX_LIGHTS>, 4> params = {};
 
-        for (const auto spotView = registry->view<const Transform, const PointLight2D>(); const auto entity : spotView)
+        for (const auto pointView = registry->view<const Transform, const PointLight2D>();
+             const auto entity : pointView)
         {
-            const auto& transform = spotView.get<Transform>(entity);
-            const auto& light = spotView.get<PointLight2D>(entity);
+            const auto& transform = pointView.get<Transform>(entity);
+            const auto& [color, intensity, radius,
+                falloff, enabled] = pointView.get<PointLight2D>(entity);
 
-            if (!light.enabled)
+            if (!enabled)
                 continue;
 
             if (index >= MAX_LIGHTS)
@@ -30,16 +32,51 @@ namespace MiniEngine
 
             positions[index][0] = transform.position.x;
             positions[index][1] = transform.position.y;
-            positions[index][2] = transform.position.z;
+            positions[index][2] = 0.0f;
             positions[index][3] = 0.0f;
 
-            colors[index][0] = light.color[0];
-            colors[index][1] = light.color[1];
-            colors[index][2] = light.color[2];
-            colors[index][3] = light.intensity;
+            colors[index][0] = color.x;
+            colors[index][1] = color.y;
+            colors[index][2] = color.z;
+            colors[index][3] = intensity;
 
-            params[index][0] = light.radius;
-            params[index][1] = light.falloff;
+            params[index][0] = radius;
+            params[index][1] = falloff;
+
+            ++index;
+        }
+
+        for (const auto spotView = registry->view<const Transform, const SpotLight2D>();
+             const auto entity : spotView)
+        {
+            const auto& transform = spotView.get<Transform>(entity);
+            const auto& [color, intensity, radius, innerAngle,
+                outerAngle, falloff, enabled] = spotView.get<SpotLight2D>(entity);
+
+            if (!enabled)
+                continue;
+
+            if (index >= MAX_LIGHTS)
+                break;
+
+            const float angle = transform.rotation.z;
+            const float directionX = std::cos(angle);
+            const float directionY = std::sin(angle);
+
+            positions[index][0] = transform.position.x;
+            positions[index][1] = transform.position.y;
+            positions[index][2] = directionX;
+            positions[index][3] = directionY;
+
+            colors[index][0] = color.x;
+            colors[index][1] = color.y;
+            colors[index][2] = color.z;
+            colors[index][3] = intensity;
+
+            params[index][0] = radius;
+            params[index][1] = falloff;
+            params[index][2] = std::cos(innerAngle);
+            params[index][3] = std::cos(outerAngle);
 
             ++index;
         }
@@ -48,30 +85,46 @@ namespace MiniEngine
         {
             bgfx::setUniform(
                 bgfx::UniformHandle{shaderData.ulightPositions_idx},
-                positions,
+                positions.data(),
                 index);
 
             bgfx::setUniform(
                 bgfx::UniformHandle{shaderData.ulightColors_idx},
-                colors,
+                colors.data(),
                 index);
 
             bgfx::setUniform(
                 bgfx::UniformHandle{shaderData.ulightParams_idx},
-                params,
+                params.data(),
                 index);
         }
 
-        const float count[4] = {static_cast<float>(index), 0.0f, 0.0f, 0.0f};
+        const std::array count = {static_cast<float>(index), 0.0f, 0.0f, 0.0f};
 
         bgfx::setUniform(
             bgfx::UniformHandle{shaderData.ulightCount_idx},
-            count);
+            count.data());
 
-        constexpr float ambient[4] = {1.0f, 1.0f, 1.0f, 0.0f};
+        std::array<float, 4> ambient = {};
+
+        if (const auto ambientView = registry->view<const AmbientLight2D>(); ambientView.begin() !=
+            ambientView.end())
+        {
+            const auto entity = *ambientView.begin();
+
+            const auto [color, intensity] = ambientView.get<AmbientLight2D>(entity);
+
+            ambient = {
+                color.x, color.y, color.z, intensity
+            };
+        }
+        else
+        {
+            ambient = {1.0f, 1.0f, 1.0f, 0.0f};
+        }
 
         bgfx::setUniform(
             bgfx::UniformHandle{shaderData.uambientColor_idx},
-            ambient);
+            ambient.data());
     }
 } // MiniEngine
