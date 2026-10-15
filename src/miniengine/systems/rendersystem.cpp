@@ -2,11 +2,11 @@
 // Created by matheus on 16/09/2026.
 //
 
-#include "rendersystem.h"
+#include "../systems/rendersystem.h"
 
-#include "entity.h"
-#include "lightsystem.h"
-#include "renderer.h"
+#include "../ecs/entity.h"
+#include "../systems/lightsystem.h"
+#include "../ecs/renderer.h"
 #include "miniengine/core/graphics.h"
 
 namespace MiniEngine
@@ -63,7 +63,7 @@ namespace MiniEngine
 
                 bgfx::setTransform(model);
 
-                LightSystem::prepare(registry, *p_shaderData);
+                LightSystem::prepare(registry, transform, *p_shaderData);
                 bgfx::setUniform(color, p_material->color.data());
 
                 bgfx::setVertexBuffer(0, vbh);

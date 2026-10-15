@@ -7,9 +7,9 @@
 #include "core/inputsystem.h"
 #include "core/resourcemanager.h"
 #include "core/scene.h"
-#include "ecs/physicssystem.h"
-#include "ecs/rendersystem.h"
-#include "ecs/scriptsystem.h"
+#include "systems/physicssystem.h"
+#include "systems/rendersystem.h"
+#include "systems/scriptsystem.h"
 #include "SDL3/SDL_timer.h"
 
 namespace MiniEngine

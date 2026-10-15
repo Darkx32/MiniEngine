@@ -8,7 +8,7 @@
 #include "miniengine/core/graphics.h"
 #include "miniengine/math/vector2.h"
 #include "entity.h"
-#include "lightsystem.h"
+#include "../systems/lightsystem.h"
 
 
 namespace MiniEngine

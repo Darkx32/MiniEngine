@@ -2,9 +2,9 @@
 // Created by matheus on 19/09/2026.
 //
 
-#include "scriptsystem.h"
+#include "../systems/scriptsystem.h"
 
-#include "entity.h"
+#include "../ecs/entity.h"
 
 namespace MiniEngine
 {

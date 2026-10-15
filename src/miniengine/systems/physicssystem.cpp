@@ -4,8 +4,8 @@
 
 #include "physicssystem.h"
 
-#include "entity.h"
-#include "physics.h"
+#include "../ecs/entity.h"
+#include "../ecs/physics.h"
 
 namespace MiniEngine
 {

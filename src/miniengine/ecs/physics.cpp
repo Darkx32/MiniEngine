@@ -5,7 +5,7 @@
 #include "physics.h"
 
 #include "entity.h"
-#include "physicssystem.h"
+#include "../systems/physicssystem.h"
 #include "miniengine/math/vector2.h"
 
 namespace MiniEngine

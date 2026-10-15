@@ -4,13 +4,13 @@
 
 #include "lightsystem.h"
 
-#include "entity.h"
-#include "lights.h"
-#include "renderer.h"
+#include "../ecs/entity.h"
+#include "../ecs/lights.h"
+#include "../ecs/renderer.h"
 
 namespace MiniEngine
 {
-    void LightSystem::prepare(entt::registry* registry, const ShaderData& shaderData)
+    void LightSystem::prepare(entt::registry* registry, const Transform& oTransform, const ShaderData& shaderData)
     {
         uint16_t index = 0;
         std::array<std::array<float, MAX_LIGHTS>, 4> positions = {};
@@ -24,7 +24,8 @@ namespace MiniEngine
             const auto& [color, intensity, radius,
                 falloff, enabled] = pointView.get<PointLight2D>(entity);
 
-            if (!enabled)
+            if (!enabled || !circleIntersectsCircle(oTransform.position, oTransform.scale.x,
+                                                    transform.position, radius))
                 continue;
 
             if (index >= MAX_LIGHTS)
@@ -53,7 +54,8 @@ namespace MiniEngine
             const auto& [color, intensity, radius, innerAngle,
                 outerAngle, falloff, enabled] = spotView.get<SpotLight2D>(entity);
 
-            if (!enabled)
+            if (!enabled || !circleIntersectsCircle(oTransform.position, oTransform.scale.x,
+                                                    transform.position, radius))
                 continue;
 
             if (index >= MAX_LIGHTS)
@@ -126,5 +128,15 @@ namespace MiniEngine
         bgfx::setUniform(
             bgfx::UniformHandle{shaderData.uambientColor_idx},
             ambient.data());
+    }
+
+    bool LightSystem::circleIntersectsCircle(const Vector3 aPos, float aRadius, const Vector3 bPos, float bRadius)
+    {
+        const float dx = bPos.x - aPos.x;
+        const float dy = bPos.y - aPos.y;
+
+        const float radiusSum = aRadius + bRadius;
+
+        return dx * dx + dy * dy < radiusSum * radiusSum;
     }
 } // MiniEngine

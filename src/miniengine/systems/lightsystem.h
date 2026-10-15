@@ -8,10 +8,13 @@
 namespace MiniEngine
 {
     struct ShaderData;
+    struct Transform;
+    struct Vector3;
 
     struct LightSystem
     {
-        static void prepare(entt::registry* registry, const ShaderData& shaderData);
+        static void prepare(entt::registry* registry, const Transform& oTransform, const ShaderData& shaderData);
+        static bool circleIntersectsCircle(Vector3 aPos, float aRadius, Vector3 bPos, float bRadius);
 
         static constexpr uint16_t MAX_LIGHTS = 16;
     };
