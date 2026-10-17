@@ -37,6 +37,7 @@ namespace MiniEngine
             void* nativeDisplayType;
             const uint32_t width;
             const uint32_t height;
+            const bool type;
         };
 
         static bool initializePrograms(const InitData& initData);

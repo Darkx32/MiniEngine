@@ -85,19 +85,45 @@ namespace MiniEngine
         const SDL_PropertiesID props = SDL_GetWindowProperties(window);
 
 #if defined(SDL_PLATFORM_WINDOWS)
-        return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
+        return SDL_GetPointerProperty(
+            props,
+            SDL_PROP_WINDOW_WIN32_HWND_POINTER,
+            nullptr
+        );
 
 #elif defined(SDL_PLATFORM_MACOS)
-        return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, nullptr);
+        return SDL_GetPointerProperty(
+            props,
+            SDL_PROP_WINDOW_COCOA_WINDOW_POINTER,
+            nullptr
+        );
 
 #elif defined(SDL_PLATFORM_LINUX)
-        if (void* waylandSurface = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, nullptr))
-        {
-            return waylandSurface;
-        }
-        const Uint64 x11Window = SDL_GetNumberProperty(props, SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0);
-        return reinterpret_cast<void*>(static_cast<uintptr_t>(x11Window));
+        const char* driver = SDL_GetCurrentVideoDriver();
 
+        if (driver && SDL_strcmp(driver, "wayland") == 0)
+        {
+            return SDL_GetPointerProperty(
+                props,
+                SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER,
+                nullptr
+            );
+        }
+
+        if (driver && SDL_strcmp(driver, "x11") == 0)
+        {
+            const Uint64 x11Window = SDL_GetNumberProperty(
+                props,
+                SDL_PROP_WINDOW_X11_WINDOW_NUMBER,
+                0
+            );
+
+            return reinterpret_cast<void*>(
+                static_cast<uintptr_t>(x11Window)
+            );
+        }
+
+        return nullptr;
 #else
         return nullptr;
 #endif
@@ -107,15 +133,52 @@ namespace MiniEngine
     {
 #if defined(SDL_PLATFORM_LINUX)
         const SDL_PropertiesID props = SDL_GetWindowProperties(window);
+        const char* driver = SDL_GetCurrentVideoDriver();
 
-        if (void* waylandDisplay = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, nullptr))
+        if (driver && SDL_strcmp(driver, "wayland") == 0)
         {
-            return waylandDisplay;
+            return SDL_GetPointerProperty(
+                props,
+                SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER,
+                nullptr
+            );
         }
-        return SDL_GetPointerProperty(props, SDL_PROP_WINDOW_X11_DISPLAY_POINTER, nullptr);
+
+        if (driver && SDL_strcmp(driver, "x11") == 0)
+        {
+            return SDL_GetPointerProperty(
+                props,
+                SDL_PROP_WINDOW_X11_DISPLAY_POINTER,
+                nullptr
+            );
+        }
+
+        return nullptr;
 #else
         return nullptr;
 #endif
     }
-}
 
+    bool Window::getNativeWindowHandleType()
+    {
+#if defined(SDL_PLATFORM_LINUX)
+
+        if (const char* driver = SDL_GetCurrentVideoDriver())
+        {
+            if (SDL_strcmp(driver, "wayland") == 0)
+                return bgfx::NativeWindowHandleType::Wayland;
+
+            if (SDL_strcmp(driver, "x11") == 0)
+                return bgfx::NativeWindowHandleType::Default;
+        }
+
+#elif defined(SDL_PLATFORM_WINDOWS)
+        return bgfx::NativeWindowHandleType::Default;
+
+#elif defined(SDL_PLATFORM_MACOS)
+        return bgfx::NativeWindowHandleType::Default;
+#endif
+
+        return bgfx::NativeWindowHandleType::Default;
+    }
+}

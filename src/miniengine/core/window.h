@@ -31,6 +31,7 @@ namespace MiniEngine
 
         [[nodiscard]] void* getNativeWindowHandle() const;
         [[nodiscard]] void* getNativeDisplayType() const;
+        static bool getNativeWindowHandleType();
 
         SDL_Window* window;
         bool isOpen;

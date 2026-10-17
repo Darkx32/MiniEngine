@@ -48,7 +48,8 @@ namespace MiniEngine
         if (!Graphics::initializePrograms({
             .resourceManager = resourceManager.get(), .nativeWindowHandle = window->getNativeWindowHandle(),
             .nativeDisplayType = window->getNativeDisplayType(),
-            .width = static_cast<uint32_t>(window->getWidth()), .height = static_cast<uint32_t>(window->getHeight())
+            .width = static_cast<uint32_t>(window->getWidth()), .height = static_cast<uint32_t>(window->getHeight()),
+            .type = Window::getNativeWindowHandleType()
         }))
         {
             spdlog::error("Failed to initialize Graphics");

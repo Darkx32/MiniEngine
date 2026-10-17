@@ -102,6 +102,7 @@ namespace MiniEngine
         init.callback = &bgfx_callback;
         init.swapChain.nwh = initData.nativeWindowHandle;
         init.swapChain.ndt = initData.nativeDisplayType;
+        init.platformData.type = static_cast<bgfx::NativeWindowHandleType::Enum>(initData.type);
         init.swapChain.width = initData.width;
         init.swapChain.height = initData.height;
         init.reset = BGFX_RESET_VSYNC;
