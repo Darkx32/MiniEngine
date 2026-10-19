@@ -9,6 +9,7 @@
 #include "miniengine/math/vector2.h"
 #include "entity.h"
 #include "../systems/lightsystem.h"
+#include "miniengine/systems/shadowsystem.h"
 
 
 namespace MiniEngine
@@ -52,6 +53,12 @@ namespace MiniEngine
             LightSystem::MAX_LIGHTS
         ).idx;
 
+        ushadowSegments_idx = bgfx::createUniform(
+            "u_shadowSegments",
+            bgfx::UniformType::Vec4,
+            ShadowSystem::MAX_SHADOW_SEGMENTS
+        ).idx;
+
         ulightColors_idx = bgfx::createUniform(
             "u_lightColors",
             bgfx::UniformType::Vec4,
@@ -66,6 +73,16 @@ namespace MiniEngine
 
         ulightCount_idx = bgfx::createUniform(
             "u_lightCount",
+            bgfx::UniformType::Vec4
+        ).idx;
+
+        ushadowCount_idx = bgfx::createUniform(
+            "u_shadowCount",
+            bgfx::UniformType::Vec4
+        ).idx;
+
+        ushadowIgnore_idx = bgfx::createUniform(
+            "u_shadowIgnore",
             bgfx::UniformType::Vec4
         ).idx;
 
@@ -86,6 +103,9 @@ namespace MiniEngine
         if (ulightPositions_idx != bgfx::kInvalidHandle)
             bgfx::destroy(bgfx::UniformHandle{ulightPositions_idx});
 
+        if (ushadowSegments_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ushadowSegments_idx});
+
         if (ulightColors_idx != bgfx::kInvalidHandle)
             bgfx::destroy(bgfx::UniformHandle{ulightColors_idx});
 
@@ -94,6 +114,12 @@ namespace MiniEngine
 
         if (ulightCount_idx != bgfx::kInvalidHandle)
             bgfx::destroy(bgfx::UniformHandle{ulightCount_idx});
+
+        if (ushadowCount_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ushadowCount_idx});
+
+        if (ushadowIgnore_idx != bgfx::kInvalidHandle)
+            bgfx::destroy(bgfx::UniformHandle{ushadowIgnore_idx});
 
         if (uambientColor_idx != bgfx::kInvalidHandle)
             bgfx::destroy(bgfx::UniformHandle{uambientColor_idx});

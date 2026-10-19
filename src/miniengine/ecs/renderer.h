@@ -18,9 +18,12 @@ namespace MiniEngine
         uint16_t ucolor_idx = 0xFFFF;
 
         uint16_t ulightPositions_idx = 0xFFFF;
+        uint16_t ushadowSegments_idx = 0xFFFF;
         uint16_t ulightColors_idx = 0xFFFF;
         uint16_t ulightParams_idx = 0xFFFF;
         uint16_t ulightCount_idx = 0xFFFF;
+        uint16_t ushadowCount_idx = 0xFFFF;
+        uint16_t ushadowIgnore_idx = 0xFFFF;
         uint16_t uambientColor_idx = 0xFFFF;
 
         ShaderData();

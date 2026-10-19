@@ -4,6 +4,7 @@
 
 #include "../systems/rendersystem.h"
 
+#include "shadowsystem.h"
 #include "../ecs/entity.h"
 #include "../systems/lightsystem.h"
 #include "../ecs/renderer.h"
@@ -42,7 +43,7 @@ namespace MiniEngine
         bgfx::touch(Graphics::DEFAULT);
 
         registry->view<const Transform, const MeshRenderer>().each(
-            [&registry](const Transform& transform, const MeshRenderer& mesh)
+            [&registry](const entt::entity entity, const Transform& transform, const MeshRenderer& mesh)
             {
                 auto& resourceManager = ResourceManager::get();
                 const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshData);
@@ -63,6 +64,7 @@ namespace MiniEngine
 
                 bgfx::setTransform(model);
 
+                ShadowSystem::prepare(registry, entity, *p_shaderData);
                 LightSystem::prepare(registry, transform, *p_shaderData);
                 bgfx::setUniform(color, p_material->color.data());
 

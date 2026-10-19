@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <type_traits>
 #include <cstdint>
+#include <numbers>
 
 #include "spdlog/spdlog.h"
 #include <entt/entt.hpp>
