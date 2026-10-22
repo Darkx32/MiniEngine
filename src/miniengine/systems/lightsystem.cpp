@@ -2,11 +2,11 @@
 // Created by matheus on 12/10/2026.
 //
 
-#include "lightsystem.h"
+#include "miniengine/systems/lightsystem.h"
 
-#include "../ecs/entity.h"
-#include "../ecs/lights.h"
-#include "../ecs/renderer.h"
+#include "miniengine/ecs/entity.h"
+#include "miniengine/ecs/lights.h"
+#include "miniengine/ecs/renderer.h"
 
 namespace MiniEngine
 {

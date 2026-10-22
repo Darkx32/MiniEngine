@@ -2,12 +2,12 @@
 // Created by matheus on 15/09/2026.
 //
 
-#include "graphics.h"
+#include "miniengine/core/graphics.h"
 
-#include "resourcemanager.h"
+#include "miniengine/core/resourcemanager.h"
 #include "miniengine/Engine.h"
 #include "miniengine/ecs/renderer.h"
-#include "../pch.h"
+#include "miniengine/pch.h"
 
 namespace MiniEngine
 {

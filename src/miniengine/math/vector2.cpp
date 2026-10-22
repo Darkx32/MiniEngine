@@ -2,7 +2,7 @@
 // Created by matheus on 12/09/2026.
 //
 
-#include "vector2.h"
+#include "miniengine/math/vector2.h"
 
 #include <cmath>
 

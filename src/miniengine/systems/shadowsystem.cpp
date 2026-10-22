@@ -2,7 +2,7 @@
 // Created by matheus on 18/10/2026.
 //
 
-#include "shadowsystem.h"
+#include "miniengine/systems/shadowsystem.h"
 
 #include "miniengine/ecs/lights.h"
 #include "miniengine/ecs/entity.h"

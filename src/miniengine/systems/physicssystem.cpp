@@ -2,10 +2,10 @@
 // Created by matheus on 24/09/2026.
 //
 
-#include "physicssystem.h"
+#include "miniengine/systems/physicssystem.h"
 
-#include "../ecs/entity.h"
-#include "../ecs/physics.h"
+#include "miniengine/ecs/entity.h"
+#include "miniengine/ecs/physics.h"
 
 namespace MiniEngine
 {

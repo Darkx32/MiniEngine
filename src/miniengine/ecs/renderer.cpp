@@ -1,14 +1,14 @@
 //
 // Created by matheus on 18/09/2026.
 //
-#include "renderer.h"
+#include "miniengine/ecs/renderer.h"
 
 #include "miniengine_shaders.hpp"
 #include "miniengine/math/vector3.h"
 #include "miniengine/core/graphics.h"
 #include "miniengine/math/vector2.h"
-#include "entity.h"
-#include "../systems/lightsystem.h"
+#include "miniengine/ecs/entity.h"
+#include "miniengine/systems/lightsystem.h"
 #include "miniengine/systems/shadowsystem.h"
 
 

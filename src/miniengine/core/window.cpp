@@ -2,9 +2,9 @@
 // Created by matheus on 11/09/2026.
 //
 
-#include "window.h"
+#include "miniengine/core/window.h"
 
-#include "debugui.h"
+#include "miniengine/core/debugui.h"
 
 namespace MiniEngine
 {

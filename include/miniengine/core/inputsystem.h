@@ -6,7 +6,7 @@
 #define MINIENGINE_INPUTSYSTEM_H
 #include <cstdint>
 
-#include "window.h"
+#include "miniengine/core/window.h"
 
 namespace MiniEngine
 {

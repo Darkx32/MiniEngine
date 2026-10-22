@@ -2,7 +2,7 @@
 // Created by matheus on 13/09/2026.
 //
 
-#include "entity.h"
+#include "miniengine/ecs/entity.h"
 
 namespace MiniEngine
 {

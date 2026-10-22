@@ -2,7 +2,7 @@
 // Created by matheus on 18/09/2026.
 //
 
-#include "resourcemanager.h"
+#include "miniengine/core/resourcemanager.h"
 
 namespace MiniEngine
 {

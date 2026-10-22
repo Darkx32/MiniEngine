@@ -4,6 +4,7 @@
 
 #ifndef MINIENGINE_SCENE_H
 #define MINIENGINE_SCENE_H
+#include <vector>
 #include "miniengine/ecs/entity.h"
 
 namespace MiniEngine
