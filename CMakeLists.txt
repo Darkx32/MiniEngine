@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Position Independent Code for building shared libraries and their static dependencies
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # Export compile commands for IDEs (CLion, VS Code)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -212,37 +215,46 @@ add_custom_target(miniengine_shaders
 )
 
 # -------------------------------------------------------------
-# MiniEngine Target
+# MiniEngine Target (Shared Library)
 # -------------------------------------------------------------
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/miniengine/*/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/miniengine/*/*.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/miniengine/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/miniengine/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-add_executable(miniengine
+file(GLOB_RECURSE ENGINE_HEADERS CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/miniengine/*.h"
+)
+
+add_library(miniengine SHARED
     ${ENGINE_SOURCES}
+    ${ENGINE_HEADERS}
     ${ALL_GENERATED_SHADER_HEADERS}
 )
+
+add_library(MiniEngine::miniengine ALIAS miniengine)
 
 add_dependencies(miniengine miniengine_shaders)
 
 # Include directories
-target_include_directories(miniengine PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
-    "${SHADER_OUTPUT_DIR}"
-    "${BX_DIR}/include"
-    "${BIMG_DIR}/include"
-    "${BGFX_DIR}/include"
-    "${IMGUI_DIR}"
+target_include_directories(miniengine
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/miniengine"
+        "${SHADER_OUTPUT_DIR}"
+        "${BX_DIR}/include"
+        "${BIMG_DIR}/include"
+        "${BGFX_DIR}/include"
+        "${IMGUI_DIR}"
 )
 
 # Precompiled header
-target_precompile_headers(miniengine PRIVATE src/miniengine/pch.h)
+target_precompile_headers(miniengine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include/miniengine/pch.h")
 
 # Link all requested libraries
-target_link_libraries(miniengine PRIVATE
+target_link_libraries(miniengine PUBLIC
     bgfx
     bimg
     bx
@@ -252,4 +264,17 @@ target_link_libraries(miniengine PRIVATE
     spdlog::spdlog
     EnTT::EnTT
     imgui
+)
+
+# -------------------------------------------------------------
+# Example Target
+# -------------------------------------------------------------
+add_executable(example
+    "${CMAKE_CURRENT_SOURCE_DIR}/examples/main.cpp"
+)
+
+add_executable(miniengine_example ALIAS example)
+
+target_link_libraries(example PRIVATE
+    miniengine
 )
