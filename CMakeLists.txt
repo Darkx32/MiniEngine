@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 project(miniengine
-    VERSION 0.1.0
-    LANGUAGES C CXX
+        VERSION 0.1.0
+        LANGUAGES C CXX
 )
 
 set(CMAKE_CXX_STANDARD 23)
@@ -17,6 +17,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # -------------------------------------------------------------
 # Configuration & Dependencies Options
 # -------------------------------------------------------------
+option(BUILD_EXAMPLES "Compile all examples" ON)
+
 # bgfx / bx / bimg configuration
 set(BX_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/bx" CACHE PATH "Location of bx" FORCE)
 set(BIMG_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/bimg" CACHE PATH "Location of bimg" FORCE)
@@ -79,16 +81,16 @@ add_subdirectory(external/entt)
 
 # ImGui
 add_library(imgui STATIC
-    ${IMGUI_DIR}/imgui.cpp
-    ${IMGUI_DIR}/imgui_demo.cpp
-    ${IMGUI_DIR}/imgui_draw.cpp
-    ${IMGUI_DIR}/imgui_tables.cpp
-    ${IMGUI_DIR}/imgui_widgets.cpp
-    ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/imgui_demo.cpp
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_sdl3.cpp
 )
 target_include_directories(imgui PUBLIC
-    ${IMGUI_DIR}
-    ${IMGUI_DIR}/backends
+        ${IMGUI_DIR}
+        ${IMGUI_DIR}/backends
 )
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
 
@@ -107,48 +109,48 @@ file(GLOB_RECURSE FRAGMENT_SHADERS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR
 
 set(ALL_GENERATED_SHADER_HEADERS "")
 
-if(VERTEX_SHADERS)
+if (VERTEX_SHADERS)
     bgfx_compile_shaders(
-        SHADERS ${VERTEX_SHADERS}
-        TYPE VERTEX
-        VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
-        OUTPUT_DIR "${SHADER_OUTPUT_DIR}"
-        OUT_FILES_VAR COMPILED_VERTEX_HEADERS
-        AS_HEADERS
+            SHADERS ${VERTEX_SHADERS}
+            TYPE VERTEX
+            VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
+            OUTPUT_DIR "${SHADER_OUTPUT_DIR}"
+            OUT_FILES_VAR COMPILED_VERTEX_HEADERS
+            AS_HEADERS
     )
     list(APPEND ALL_GENERATED_SHADER_HEADERS ${COMPILED_VERTEX_HEADERS})
-endif()
+endif ()
 
-if(FRAGMENT_SHADERS)
+if (FRAGMENT_SHADERS)
     bgfx_compile_shaders(
-        SHADERS ${FRAGMENT_SHADERS}
-        TYPE FRAGMENT
-        VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
-        OUTPUT_DIR "${SHADER_OUTPUT_DIR}"
-        OUT_FILES_VAR COMPILED_FRAGMENT_HEADERS
-        AS_HEADERS
+            SHADERS ${FRAGMENT_SHADERS}
+            TYPE FRAGMENT
+            VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
+            OUTPUT_DIR "${SHADER_OUTPUT_DIR}"
+            OUT_FILES_VAR COMPILED_FRAGMENT_HEADERS
+            AS_HEADERS
     )
     list(APPEND ALL_GENERATED_SHADER_HEADERS ${COMPILED_FRAGMENT_HEADERS})
-endif()
+endif ()
 
 # Generate shader wrapper headers so each shader can be included simply by its basename
-foreach(SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
+foreach (SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
     get_filename_component(SHADER_NAME_WE ${SHADER_FILE} NAME_WE)
     get_filename_component(SHADER_NAME ${SHADER_FILE} NAME)
     set(WRAPPER_HEADER "${SHADER_OUTPUT_DIR}/${SHADER_NAME_WE}.bin.h")
     file(WRITE "${WRAPPER_HEADER}"
-"// Auto-generated shader profile includes for ${SHADER_NAME_WE}
+            "// Auto-generated shader profile includes for ${SHADER_NAME_WE}
 #pragma once
 #include <bx/platform.h>
 #include \"spirv/${SHADER_NAME}.bin.h\"
 #include \"glsl/${SHADER_NAME}.bin.h\"
 #include \"essl/${SHADER_NAME}.bin.h\"
 ")
-endforeach()
+endforeach ()
 
 # Generate global master shader header: miniengine_shaders.hpp
 set(MASTER_SHADER_CONTENT
-"// Auto-generated master shader definitions for MiniEngine
+        "// Auto-generated master shader definitions for MiniEngine
 #pragma once
 
 #include <bgfx/bgfx.h>
@@ -176,20 +178,20 @@ set(MASTER_SHADER_CONTENT
 
 ")
 
-foreach(SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
+foreach (SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
     get_filename_component(SHADER_NAME_WE ${SHADER_FILE} NAME_WE)
     string(APPEND MASTER_SHADER_CONTENT "#include \"${SHADER_NAME_WE}.bin.h\"\n")
-endforeach()
+endforeach ()
 
 string(APPEND MASTER_SHADER_CONTENT "
 namespace MiniEngine::Shaders {
     static const bgfx::EmbeddedShader s_embeddedShaders[] = {
 ")
 
-foreach(SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
+foreach (SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
     get_filename_component(SHADER_NAME_WE ${SHADER_FILE} NAME_WE)
     string(APPEND MASTER_SHADER_CONTENT "        BGFX_EMBEDDED_SHADER(${SHADER_NAME_WE}),\n")
-endforeach()
+endforeach ()
 
 string(APPEND MASTER_SHADER_CONTENT "        BGFX_EMBEDDED_SHADER_END()
     };
@@ -210,25 +212,25 @@ file(WRITE "${SHADER_OUTPUT_DIR}/miniengine_shaders.hpp" "${MASTER_SHADER_CONTEN
 
 # Custom target to trigger shader compilation
 add_custom_target(miniengine_shaders
-    DEPENDS ${ALL_GENERATED_SHADER_HEADERS}
-    COMMENT "[MiniEngine] Compiling bgfx shaders to headers..."
+        DEPENDS ${ALL_GENERATED_SHADER_HEADERS}
+        COMMENT "[MiniEngine] Compiling bgfx shaders to headers..."
 )
 
 # -------------------------------------------------------------
 # MiniEngine Target (Shared Library)
 # -------------------------------------------------------------
 file(GLOB_RECURSE ENGINE_SOURCES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
 file(GLOB_RECURSE ENGINE_HEADERS CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/miniengine/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/miniengine/*.h"
 )
 
 add_library(miniengine SHARED
-    ${ENGINE_SOURCES}
-    ${ENGINE_HEADERS}
-    ${ALL_GENERATED_SHADER_HEADERS}
+        ${ENGINE_SOURCES}
+        ${ENGINE_HEADERS}
+        ${ALL_GENERATED_SHADER_HEADERS}
 )
 
 add_library(MiniEngine::miniengine ALIAS miniengine)
@@ -237,10 +239,10 @@ add_dependencies(miniengine miniengine_shaders)
 
 # Include directories
 target_include_directories(miniengine
-    PUBLIC
+        PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
-    PRIVATE
+        PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/src"
         "${CMAKE_CURRENT_SOURCE_DIR}/include/miniengine"
         "${SHADER_OUTPUT_DIR}"
@@ -255,26 +257,18 @@ target_precompile_headers(miniengine PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/includ
 
 # Link all requested libraries
 target_link_libraries(miniengine PUBLIC
-    bgfx
-    bimg
-    bx
-    SDL3::SDL3
-    box2d
-    miniaudio
-    spdlog::spdlog
-    EnTT::EnTT
-    imgui
+        bgfx
+        bimg
+        bx
+        SDL3::SDL3
+        box2d
+        miniaudio
+        spdlog::spdlog
+        EnTT::EnTT
+        imgui
 )
 
-# -------------------------------------------------------------
-# Example Target
-# -------------------------------------------------------------
-add_executable(example
-    "${CMAKE_CURRENT_SOURCE_DIR}/examples/main.cpp"
-)
-
-add_executable(miniengine_example ALIAS example)
-
-target_link_libraries(example PRIVATE
-    miniengine
-)
+# Examples
+if (BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif ()

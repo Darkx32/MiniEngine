@@ -1,0 +1,2 @@
+add_executable(SolarSystem solar.cpp)
+target_link_libraries(SolarSystem PRIVATE miniengine)
