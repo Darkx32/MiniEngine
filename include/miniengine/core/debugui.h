@@ -5,6 +5,8 @@
 #ifndef MINIENGINE_DEBUGUI_H
 #define MINIENGINE_DEBUGUI_H
 
+#include <cstdint>
+
 struct SDL_Window;
 union SDL_Event;
 

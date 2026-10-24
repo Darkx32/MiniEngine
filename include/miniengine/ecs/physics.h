@@ -5,6 +5,10 @@
 #ifndef MINIENGINE_PHYSICS_H
 #define MINIENGINE_PHYSICS_H
 
+#include <vector>
+#include "box2d/types.h"
+#include "box2d/id.h"
+
 namespace MiniEngine
 {
     struct Vector2;

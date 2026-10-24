@@ -2,12 +2,12 @@
 // Created by matheus on 16/09/2026.
 //
 
-#include "../systems/rendersystem.h"
+#include "miniengine/systems/rendersystem.h"
 
-#include "shadowsystem.h"
-#include "../ecs/entity.h"
-#include "../systems/lightsystem.h"
-#include "../ecs/renderer.h"
+#include "miniengine/systems/shadowsystem.h"
+#include "miniengine/ecs/entity.h"
+#include "miniengine/systems/lightsystem.h"
+#include "miniengine/ecs/renderer.h"
 #include "miniengine/core/graphics.h"
 
 namespace MiniEngine

@@ -1,15 +1,15 @@
-#include "Engine.h"
+#include "miniengine/Engine.h"
 #include <spdlog/spdlog.h>
 
 #include "bgfx/bgfx.h"
-#include "core/debugui.h"
-#include "core/graphics.h"
-#include "core/inputsystem.h"
-#include "core/resourcemanager.h"
-#include "core/scene.h"
-#include "systems/physicssystem.h"
-#include "systems/rendersystem.h"
-#include "systems/scriptsystem.h"
+#include "miniengine/core/debugui.h"
+#include "miniengine/core/graphics.h"
+#include "miniengine/core/inputsystem.h"
+#include "miniengine/core/resourcemanager.h"
+#include "miniengine/core/scene.h"
+#include "miniengine/systems/physicssystem.h"
+#include "miniengine/systems/rendersystem.h"
+#include "miniengine/systems/scriptsystem.h"
 #include "SDL3/SDL_timer.h"
 
 namespace MiniEngine

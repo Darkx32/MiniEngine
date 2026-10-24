@@ -1,10 +1,10 @@
-#include "Engine.h"
-#include "core/graphics.h"
-#include "core/scene.h"
-#include "ecs/entity.h"
-#include "ecs/lights.h"
-#include "ecs/physics.h"
-#include "ecs/renderer.h"
+#include "miniengine/Engine.h"
+#include "miniengine/core/graphics.h"
+#include "miniengine/core/scene.h"
+#include "miniengine/ecs/entity.h"
+#include "miniengine/ecs/lights.h"
+#include "miniengine/ecs/physics.h"
+#include "miniengine/ecs/renderer.h"
 
 namespace
 {

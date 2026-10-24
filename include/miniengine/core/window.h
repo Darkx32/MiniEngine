@@ -6,7 +6,7 @@
 #define MINIENGINE_WINDOW_H
 #include <string>
 
-#include "../math/vector2.h"
+#include "miniengine/math/vector2.h"
 
 struct SDL_Window;
 

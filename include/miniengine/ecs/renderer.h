@@ -4,6 +4,8 @@
 
 #ifndef MINIENGINE_RENDER_H
 #define MINIENGINE_RENDER_H
+#include <array>
+#include <cstdint>
 #include "miniengine/core/resourcemanager.h"
 
 namespace MiniEngine

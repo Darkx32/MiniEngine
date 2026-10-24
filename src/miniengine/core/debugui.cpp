@@ -2,15 +2,15 @@
 // Created by matheus on 01/10/2026.
 //
 
-#include "debugui.h"
+#include "miniengine/core/debugui.h"
 
 #include <algorithm>
 
-#include "graphics.h"
+#include "miniengine/core/graphics.h"
 #include "miniengine_shaders.hpp"
 #include "imgui.h"
 #include "backends/imgui_impl_sdl3.h"
-#include "../pch.h"
+#include "miniengine/pch.h"
 
 namespace MiniEngine
 {

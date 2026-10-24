@@ -5,6 +5,9 @@
 #ifndef MINIENGINE_ENTITY_H
 #define MINIENGINE_ENTITY_H
 
+#include <cassert>
+#include <memory>
+#include <vector>
 #include "entt/entt.hpp"
 #include "miniengine/core/resourcemanager.h"
 #include "miniengine/math/vector3.h"

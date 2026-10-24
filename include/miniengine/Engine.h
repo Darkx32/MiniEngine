@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 
-#include "core/window.h"
+#include "miniengine/core/window.h"
 
 namespace MiniEngine
 {
