@@ -4,6 +4,7 @@ bin/
 out/
 cmake-build-*/
 CMakeUserPresets.json
+imgui.ini
 
 # IDE / Editor files
 .idea/
