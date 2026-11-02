@@ -42,5 +42,10 @@ namespace MiniEngine
         b2DestroyWorld(id);
     }
 
+    b2WorldId PhysicsSystem::getWorldId()
+    {
+        return id;
+    }
+
     b2WorldId PhysicsSystem::id = b2_nullWorldId;
 } // MiniEngine

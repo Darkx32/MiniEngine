@@ -1,7 +1,5 @@
 #pragma once
 #include <memory>
-#include <string>
-
 #include "miniengine/core/window.h"
 
 namespace MiniEngine
