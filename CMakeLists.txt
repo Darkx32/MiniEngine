@@ -140,16 +140,26 @@ endif ()
 foreach (SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
     get_filename_component(SHADER_NAME_WE ${SHADER_FILE} NAME_WE)
     get_filename_component(SHADER_NAME ${SHADER_FILE} NAME)
+
     set(WRAPPER_HEADER "${SHADER_OUTPUT_DIR}/${SHADER_NAME_WE}.bin.h")
-    file(WRITE "${WRAPPER_HEADER}"
-        "// Auto-generated shader profile includes for ${SHADER_NAME_WE}
-    #pragma once
-    #include <bx/platform.h>
-    #include \"dxbc/${SHADER_NAME}.bin.h\"
-    #include \"spirv/${SHADER_NAME}.bin.h\"
-    #include \"glsl/${SHADER_NAME}.bin.h\"
-    #include \"essl/${SHADER_NAME}.bin.h\"
-    ")
+
+    set(WRAPPER_CONTENT
+            "// Auto-generated shader profile includes for ${SHADER_NAME_WE}
+        #pragma once
+        #include <bx/platform.h>
+        #include \"spirv/${SHADER_NAME}.bin.h\"
+        #include \"glsl/${SHADER_NAME}.bin.h\"
+        #include \"essl/${SHADER_NAME}.bin.h\"
+        "
+    )
+
+    if (WIN32)
+        string(APPEND WRAPPER_CONTENT
+                "#include \"dxbc/${SHADER_NAME}.bin.h\"\n"
+        )
+    endif ()
+
+    file(WRITE "${WRAPPER_HEADER}" "${WRAPPER_CONTENT}")
 endforeach ()
 
 # Generate global master shader header: miniengine_shaders.hpp
@@ -245,7 +255,7 @@ add_library(MiniEngine::miniengine ALIAS miniengine)
 add_dependencies(miniengine miniengine_shaders)
 
 set_target_properties(miniengine PROPERTIES
-    WINDOWS_EXPORT_ALL_SYMBOLS ON
+        WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
 
 # Include directories
