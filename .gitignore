@@ -13,6 +13,7 @@ CMakeUserPresets.json
 *.ipr
 *.swp
 *~
+.vs
 
 # Operating System
 .DS_Store
