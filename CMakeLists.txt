@@ -99,6 +99,7 @@ target_link_libraries(imgui PUBLIC SDL3::SDL3)
 # -------------------------------------------------------------
 set(BGFX_SHADER_INCLUDE_PATH "${BGFX_DIR}/src")
 include(${CMAKE_CURRENT_SOURCE_DIR}/external/bgfx.cmake/cmake/bgfxToolUtils.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/MiniEngineShaderCompiler.cmake)
 
 set(SHADER_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/shaders")
 file(MAKE_DIRECTORY "${SHADER_OUTPUT_DIR}")
@@ -110,7 +111,7 @@ file(GLOB_RECURSE FRAGMENT_SHADERS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR
 set(ALL_GENERATED_SHADER_HEADERS "")
 
 if (VERTEX_SHADERS)
-    bgfx_compile_shaders(
+    miniengine_compile_shaders(
             SHADERS ${VERTEX_SHADERS}
             TYPE VERTEX
             VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
@@ -123,7 +124,7 @@ if (VERTEX_SHADERS)
 endif ()
 
 if (FRAGMENT_SHADERS)
-    bgfx_compile_shaders(
+    miniengine_compile_shaders(
             SHADERS ${FRAGMENT_SHADERS}
             TYPE FRAGMENT
             VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
