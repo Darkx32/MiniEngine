@@ -89,6 +89,25 @@ namespace MiniEngine
 
     static MiniEngineBGFXCallback bgfx_callback;
 
+    static uint16_t s_quadPrimitiveID = 0xFFFF;
+    static uint16_t s_circlePrimitiveID = 0xFFFF;
+    static uint16_t s_defaultShaderID = 0xFFFF;
+
+    uint16_t Graphics::getQuadPrimitiveID()
+    {
+        return s_quadPrimitiveID;
+    }
+
+    uint16_t Graphics::getCirclePrimitiveID()
+    {
+        return s_circlePrimitiveID;
+    }
+
+    uint16_t Graphics::getDefaultShaderID()
+    {
+        return s_defaultShaderID;
+    }
+
     void Graphics::setClearColor(const uint32_t newColor)
     {
         color = newColor;
@@ -116,9 +135,9 @@ namespace MiniEngine
         bgfx::setViewRect(DEFAULT, 0, 0, static_cast<uint16_t>(initData.width), static_cast<uint16_t>(initData.height));
 
         rendererComponentInit();
-        DefaultShaderID = initData.resourceManager->create<ShaderData>();
-        QuadPrimitiveID = initData.resourceManager->create<QuadPrimitive>();
-        CirclePrimitiveID = initData.resourceManager->create<CirclePrimitive>();
+        s_defaultShaderID = initData.resourceManager->create<ShaderData>();
+        s_quadPrimitiveID = initData.resourceManager->create<QuadPrimitive>();
+        s_circlePrimitiveID = initData.resourceManager->create<CirclePrimitive>();
 
         return true;
     }
@@ -127,9 +146,4 @@ namespace MiniEngine
     {
         bgfx::shutdown();
     }
-
-    uint32_t Graphics::color = 0x000000FF;
-    uint16_t Graphics::QuadPrimitiveID = 0xFFFF;
-    uint16_t Graphics::CirclePrimitiveID = 0xFFFF;
-    uint16_t Graphics::DefaultShaderID = 0xFFFF;
 } // MiniAudio

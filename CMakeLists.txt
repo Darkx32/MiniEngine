@@ -99,6 +99,7 @@ target_link_libraries(imgui PUBLIC SDL3::SDL3)
 # -------------------------------------------------------------
 set(BGFX_SHADER_INCLUDE_PATH "${BGFX_DIR}/src")
 include(${CMAKE_CURRENT_SOURCE_DIR}/external/bgfx.cmake/cmake/bgfxToolUtils.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/MiniEngineShaderCompiler.cmake)
 
 set(SHADER_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated/shaders")
 file(MAKE_DIRECTORY "${SHADER_OUTPUT_DIR}")
@@ -110,25 +111,27 @@ file(GLOB_RECURSE FRAGMENT_SHADERS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR
 set(ALL_GENERATED_SHADER_HEADERS "")
 
 if (VERTEX_SHADERS)
-    bgfx_compile_shaders(
+    miniengine_compile_shaders(
             SHADERS ${VERTEX_SHADERS}
             TYPE VERTEX
             VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
             OUTPUT_DIR "${SHADER_OUTPUT_DIR}"
             OUT_FILES_VAR COMPILED_VERTEX_HEADERS
             AS_HEADERS
+            OPTIONS -O 0
     )
     list(APPEND ALL_GENERATED_SHADER_HEADERS ${COMPILED_VERTEX_HEADERS})
 endif ()
 
 if (FRAGMENT_SHADERS)
-    bgfx_compile_shaders(
+    miniengine_compile_shaders(
             SHADERS ${FRAGMENT_SHADERS}
             TYPE FRAGMENT
             VARYING_DEF "${CMAKE_CURRENT_SOURCE_DIR}/shader/varying.def.sc"
             OUTPUT_DIR "${SHADER_OUTPUT_DIR}"
             OUT_FILES_VAR COMPILED_FRAGMENT_HEADERS
             AS_HEADERS
+            OPTIONS -O 0
     )
     list(APPEND ALL_GENERATED_SHADER_HEADERS ${COMPILED_FRAGMENT_HEADERS})
 endif ()
@@ -139,13 +142,14 @@ foreach (SHADER_FILE ${VERTEX_SHADERS} ${FRAGMENT_SHADERS})
     get_filename_component(SHADER_NAME ${SHADER_FILE} NAME)
     set(WRAPPER_HEADER "${SHADER_OUTPUT_DIR}/${SHADER_NAME_WE}.bin.h")
     file(WRITE "${WRAPPER_HEADER}"
-            "// Auto-generated shader profile includes for ${SHADER_NAME_WE}
-#pragma once
-#include <bx/platform.h>
-#include \"spirv/${SHADER_NAME}.bin.h\"
-#include \"glsl/${SHADER_NAME}.bin.h\"
-#include \"essl/${SHADER_NAME}.bin.h\"
-")
+        "// Auto-generated shader profile includes for ${SHADER_NAME_WE}
+    #pragma once
+    #include <bx/platform.h>
+    #include \"dxbc/${SHADER_NAME}.bin.h\"
+    #include \"spirv/${SHADER_NAME}.bin.h\"
+    #include \"glsl/${SHADER_NAME}.bin.h\"
+    #include \"essl/${SHADER_NAME}.bin.h\"
+    ")
 endforeach ()
 
 # Generate global master shader header: miniengine_shaders.hpp
@@ -155,9 +159,6 @@ set(MASTER_SHADER_CONTENT
 
 #include <bgfx/bgfx.h>
 
-#ifndef BGFX_PLATFORM_SUPPORTS_DXBC
-#define BGFX_PLATFORM_SUPPORTS_DXBC 0
-#endif
 #ifndef BGFX_PLATFORM_SUPPORTS_DXIL
 #define BGFX_PLATFORM_SUPPORTS_DXIL 0
 #endif
@@ -172,6 +173,11 @@ set(MASTER_SHADER_CONTENT
 #endif
 #ifndef BGFX_PLATFORM_SUPPORTS_WGSL
 #define BGFX_PLATFORM_SUPPORTS_WGSL 0
+#endif
+#if BX_PLATFORM_WINDOWS
+#define BGFX_PLATFORM_SUPPORTS_DXBC 1
+#else
+#define BGFX_PLATFORM_SUPPORTS_DXBC 0
 #endif
 
 #include <bgfx/embedded_shader.h>
@@ -208,7 +214,8 @@ string(APPEND MASTER_SHADER_CONTENT "        BGFX_EMBEDDED_SHADER_END()
 } // namespace MiniEngine::Shaders
 ")
 
-file(WRITE "${SHADER_OUTPUT_DIR}/miniengine_shaders.hpp" "${MASTER_SHADER_CONTENT}")
+file(MAKE_DIRECTORY "${SHADER_OUTPUT_DIR}")
+file(GENERATE OUTPUT "${SHADER_OUTPUT_DIR}/miniengine_shaders.hpp" CONTENT "${MASTER_SHADER_CONTENT}")
 
 # Custom target to trigger shader compilation
 add_custom_target(miniengine_shaders
@@ -236,6 +243,10 @@ add_library(miniengine SHARED
 add_library(MiniEngine::miniengine ALIAS miniengine)
 
 add_dependencies(miniengine miniengine_shaders)
+
+set_target_properties(miniengine PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS ON
+)
 
 # Include directories
 target_include_directories(miniengine

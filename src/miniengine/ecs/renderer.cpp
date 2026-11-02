@@ -180,7 +180,7 @@ namespace MiniEngine
 
         vbh_idx = vbh.idx;
         ibh_idx = ibh.idx;
-        shaderData = Graphics::DefaultShaderID;
+        shaderData = Graphics::getDefaultShaderID();
     }
 
     QuadPrimitive::~QuadPrimitive()
@@ -241,7 +241,7 @@ namespace MiniEngine
 
         vbh_idx = vbh.idx;
         ibh_idx = ibh.idx;
-        shaderData = Graphics::DefaultShaderID;
+        shaderData = Graphics::getDefaultShaderID();
     }
 
     CirclePrimitive::~CirclePrimitive()

@@ -23,9 +23,9 @@ namespace MiniEngine
 
         static void setClearColor(uint32_t newColor);
 
-        static uint16_t QuadPrimitiveID;
-        static uint16_t CirclePrimitiveID;
-        static uint16_t DefaultShaderID;
+        static uint16_t getQuadPrimitiveID();
+        static uint16_t getCirclePrimitiveID();
+        static uint16_t getDefaultShaderID();
 
     private:
         friend class Engine;
@@ -44,7 +44,7 @@ namespace MiniEngine
         static void shutdown();
         static void rendererComponentInit();
 
-        static uint32_t color;
+        inline static uint32_t color = 0x000000FF;
     };
 } // MiniAudio
 

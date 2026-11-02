@@ -20,7 +20,7 @@ namespace
             auto& transform = entity->getComponent<MiniEngine::Transform>();
             transform.scale.x = transform.scale.y = 50;
 
-            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::CirclePrimitiveID, materialID);
+            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getCirclePrimitiveID(), materialID);
             entity->addComponent<MiniEngine::PointLight2D>();
             auto& rb = entity->addComponent<MiniEngine::RigidBody>(transform);
 
@@ -52,7 +52,7 @@ namespace
             transform.position = {-150.f, 0.0f, .0f};
             transform.scale.x = transform.scale.y = 5;
 
-            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::CirclePrimitiveID, materialID);
+            entity->addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getCirclePrimitiveID(), materialID);
             auto& shadow = entity->addComponent<MiniEngine::Shadow2D>();
             shadow.shape = MiniEngine::ShadowShape2D::Circle;
             auto& rb = entity->addComponent<MiniEngine::RigidBody>(transform);
@@ -142,14 +142,14 @@ int main()
     auto obstacle1 = scene.createEntity();
     auto& resourceManager = MiniEngine::ResourceManager::get();
     auto materialID = resourceManager.create<MiniEngine::Material>();
-    obstacle1.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID, materialID);
+    obstacle1.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveID(), materialID);
 
     auto& transform1 = obstacle1.getComponent<MiniEngine::Transform>();
     transform1.position = {0.0f, 200, .0f};
     transform1.scale = {200.0f, 50.0f, .0f};
 
     auto obstacle2 = scene.createEntity();
-    obstacle2.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::QuadPrimitiveID, materialID);
+    obstacle2.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveID(), materialID);
 
     auto& transform2 = obstacle2.getComponent<MiniEngine::Transform>();
     transform2.position = {0.0f, -200, .0f};

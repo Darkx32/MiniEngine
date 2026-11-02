@@ -105,7 +105,7 @@ namespace MiniEngine
         }
 
         size_t size() const { return order.size(); }
-        static ResourceManager& get() { return *p_resource; }
+        static ResourceManager& get();
 
     private:
         struct Entry
@@ -129,6 +129,6 @@ namespace MiniEngine
         std::unordered_map<uint16_t, std::list<Entry>::iterator> resources;
         size_t capacity;
     };
-} // MiniEngine
+    } // MiniEngine
 
 #endif //MINIENGINE_RESOURCEMANAGER_H
