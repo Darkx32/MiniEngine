@@ -21,5 +21,6 @@
 #include <bgfx/bgfx.h>
 #include <bx/math.h>
 #include <box2d/box2d.h>
+#include <miniaudio.h>
 
 #endif //MINIENGINE_PCH_H

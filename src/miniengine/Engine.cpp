@@ -2,6 +2,7 @@
 #include <spdlog/spdlog.h>
 
 #include "bgfx/bgfx.h"
+#include "core/audio.h"
 #include "miniengine/core/debugui.h"
 #include "miniengine/core/graphics.h"
 #include "miniengine/core/inputsystem.h"
@@ -56,10 +57,17 @@ namespace MiniEngine
             return false;
         }
 
-        spdlog::info("Physics System initialize");
+        spdlog::info("Audio System initializing...");
+        if (!AudioSystem::initialize())
+        {
+            spdlog::error("Error to initialize Audio System");
+            return false;
+        }
+
+        spdlog::info("Physics System initializing...");
         PhysicsSystem::initialize();
 
-        spdlog::info("DebugUI System initialize");
+        spdlog::info("DebugUI System initializing...");
         DebugUI::initialize(window->window);
 
         spdlog::info("Miniengine started successfully.");
