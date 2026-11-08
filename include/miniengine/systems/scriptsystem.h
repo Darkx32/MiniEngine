@@ -4,7 +4,6 @@
 
 #ifndef MINIENGINE_SCRIPTSYSTEM_H
 #define MINIENGINE_SCRIPTSYSTEM_H
-#include <entt/fwd.hpp>
 
 namespace MiniEngine
 {

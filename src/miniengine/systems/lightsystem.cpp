@@ -107,7 +107,7 @@ namespace MiniEngine
             bgfx::UniformHandle{shaderData.ulightCount_idx},
             count.data());
 
-        std::array<float, 4> ambient = {};
+        std::array ambient = {1.0f, 1.0f, 1.0f, 0.0f};
 
         if (const auto ambientView = registry->view<const AmbientLight2D>(); ambientView.begin() !=
             ambientView.end())
@@ -119,10 +119,6 @@ namespace MiniEngine
             ambient = {
                 color.x, color.y, color.z, intensity
             };
-        }
-        else
-        {
-            ambient = {1.0f, 1.0f, 1.0f, 0.0f};
         }
 
         bgfx::setUniform(

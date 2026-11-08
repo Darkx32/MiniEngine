@@ -14,6 +14,7 @@
 
 #include "spdlog/spdlog.h"
 #include <entt/entt.hpp>
+#include "entt/entity/registry.hpp"
 #include <SDL3/SDL.h>
 #include "SDL3/SDL_init.h"
 #include "SDL3/SDL_events.h"

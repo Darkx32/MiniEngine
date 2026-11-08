@@ -7,13 +7,22 @@
 
 namespace MiniEngine
 {
-    class AudioSystem
+    class AudioManager
     {
     public:
         static bool initialize();
         static void shutdown();
 
+        static void setMasterVolume(float volume);
+        static void createGroup(const std::string& groupName);
+        static void deleteGroup(const std::string& groupName);
+
+        static ma_sound generateSound(const std::string& filepath, const std::string& groupName = "master");
+        static void deleteSound(ma_sound* sound);
+
     private:
+        static std::unordered_map<std::string, ma_sound_group> groups;
+
         static ma_engine engine;
         static bool isInitialized;
     };

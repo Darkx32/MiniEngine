@@ -5,9 +5,6 @@
 #ifndef MINIENGINE_LIGHTSYSTEM_H
 #define MINIENGINE_LIGHTSYSTEM_H
 
-#include <cstdint>
-#include <entt/fwd.hpp>
-
 namespace MiniEngine
 {
     struct ShaderData;

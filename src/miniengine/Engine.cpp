@@ -12,6 +12,7 @@
 #include "miniengine/systems/rendersystem.h"
 #include "miniengine/systems/scriptsystem.h"
 #include "SDL3/SDL_timer.h"
+#include "systems/audiosystem.h"
 
 namespace MiniEngine
 {
@@ -58,7 +59,7 @@ namespace MiniEngine
         }
 
         spdlog::info("Audio System initializing...");
-        if (!AudioSystem::initialize())
+        if (!AudioManager::initialize())
         {
             spdlog::error("Error to initialize Audio System");
             return false;
@@ -93,15 +94,15 @@ namespace MiniEngine
 
     void Engine::run()
     {
-        spdlog::info("Starting main loop...");
-
         if (scene)
         {
             spdlog::info("Startup components...");
             ScriptSystem::startup(scene->registry);
             RenderSystem::calculate(scene->registry,
                                     {static_cast<float>(window->width), static_cast<float>(window->height)});
+            AudioSystem::prepare(scene->registry);
         }
+        spdlog::info("Starting main loop...");
         uint64_t lastTime = SDL_GetPerformanceCounter();
         while (isRunning)
         {
@@ -156,9 +157,11 @@ namespace MiniEngine
 
     void Engine::shutdown() const
     {
+        spdlog::info("Miniengine cleanup...");
         DebugUI::shutdown();
         resourceManager->clean();
         PhysicsSystem::shutdown();
+        AudioManager::shutdown();
         Graphics::shutdown();
 
         delete window;

@@ -5,9 +5,7 @@
 #ifndef MINIENGINE_ENTITY_H
 #define MINIENGINE_ENTITY_H
 
-#include <cassert>
-#include <memory>
-#include <vector>
+#include "miniaudio.h"
 #include "entt/entt.hpp"
 #include "miniengine/core/resourcemanager.h"
 #include "miniengine/math/vector3.h"
@@ -58,6 +56,21 @@ namespace MiniEngine
         Transform(const Vector3 pos, const Vector3 s, const Vector3 euler) : position(pos), scale(s), rotation(euler)
         {
         }
+    };
+
+    struct AudioStream
+    {
+        explicit AudioStream(const std::string& filepath);
+        ~AudioStream();
+
+        void play();
+        [[nodiscard]] bool isPlaying() const;
+        void stop();
+
+        ma_sound stream;
+        std::string filepath;
+        std::string group = "master";
+        bool autoPlay = false;
     };
 
     class Entity

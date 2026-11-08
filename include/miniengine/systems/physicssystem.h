@@ -4,8 +4,6 @@
 
 #ifndef MINIENGINE_PHYSICSSYSTEM_H
 #define MINIENGINE_PHYSICSSYSTEM_H
-#include "entt/fwd.hpp"
-#include "box2d/types.h"
 
 namespace MiniEngine
 {
