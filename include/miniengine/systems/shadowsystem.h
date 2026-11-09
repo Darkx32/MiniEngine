@@ -12,7 +12,8 @@ namespace MiniEngine
 
     struct ShadowSystem
     {
-        static void prepare(entt::registry* registry, entt::entity renderEntity, const ShaderData& shaderData);
+        static void prepare(entt::registry* registry, entt::entity renderEntity,
+                            const ShaderData& shaderData);
 
         static constexpr uint16_t MAX_SHADOW_SEGMENTS = 32;
     };

@@ -13,9 +13,9 @@ namespace MiniEngine
     {
     public:
         Scene();
-        ~Scene();
+        virtual ~Scene() = default;
 
-        [[nodiscard]] Entity createEntity();
+        virtual void initialize();
 
         template <typename... Components>
         [[nodiscard]] std::vector<Entity> getAllEntitiesWithComponents()
@@ -24,16 +24,19 @@ namespace MiniEngine
 
             for (auto view = registry->view<Components...>(); auto handle : view)
             {
-                entities.push_back(Entity(handle, this, registry));
+                entities.push_back(Entity(handle, this, registry.get()));
             }
 
             return entities;
         }
 
+    protected:
+        [[nodiscard]] Entity createEntity();
+
     private:
         friend class Engine;
         friend class Entity;
-        entt::registry* registry;
+        std::unique_ptr<entt::registry> registry;
     };
 } // MiniEngine
 

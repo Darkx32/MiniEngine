@@ -17,7 +17,7 @@
 namespace MiniEngine
 {
     Engine::Engine() : fps(60), isRunning(false), isDebug(false), showDebugUI(false), resourceManager(nullptr),
-                       scene(nullptr), window(nullptr)
+                       window(nullptr)
     {
     }
 
@@ -39,7 +39,7 @@ namespace MiniEngine
         spdlog::info("MiniEngine - Starting");
         spdlog::info("Starting miniengine...");
 
-        window = new Window(title.c_str(), size);
+        window = std::make_unique<Window>(title.c_str(), size);
         if (!window->init())
         {
             spdlog::error("Failed to start Window");
@@ -72,14 +72,8 @@ namespace MiniEngine
         DebugUI::initialize(window->window);
 
         spdlog::info("Miniengine started successfully.");
-        isRunning = true;
         showDebugUI = isDebug;
-        return isRunning;
-    }
-
-    void Engine::setScene(Scene* newScene)
-    {
-        scene = newScene;
+        return true;
     }
 
     void Engine::setFps(const int newFps)
@@ -94,14 +88,9 @@ namespace MiniEngine
 
     void Engine::run()
     {
-        if (scene)
-        {
-            spdlog::info("Startup components...");
-            ScriptSystem::startup(scene->registry);
-            RenderSystem::calculate(scene->registry,
-                                    {static_cast<float>(window->width), static_cast<float>(window->height)});
-            AudioSystem::prepare(scene->registry);
-        }
+        if (currentScene)
+            initializeScene();
+
         spdlog::info("Starting main loop...");
         uint64_t lastTime = SDL_GetPerformanceCounter();
         while (isRunning)
@@ -115,8 +104,8 @@ namespace MiniEngine
 
             InputSystem::update();
             window->pollEvents();
-            if (scene)
-                PhysicsSystem::update(scene->registry, dt);
+            if (currentScene)
+                PhysicsSystem::update(currentScene->registry.get(), dt);
 
             if (window->windowShouldClose() || (InputSystem::isKeyPressed(InputSystem::KeyCode::Escape) && isDebug))
                 isRunning = false;
@@ -126,19 +115,19 @@ namespace MiniEngine
             {
                 window->hasResized = false;
                 bgfx::setViewRect(Graphics::DEFAULT, 0, 0, window->width, window->height);
-                if (scene)
-                    RenderSystem::calculate(scene->registry,
+                if (currentScene)
+                    RenderSystem::calculate(currentScene->registry.get(),
                                             {static_cast<float>(window->width), static_cast<float>(window->height)});
             }
 
-            if (scene)
-                ScriptSystem::update(scene->registry, dt);
+            if (currentScene)
+                ScriptSystem::update(currentScene->registry.get(), dt);
             lastTime = currentTime;
 
             bgfx::setViewClear(Graphics::DEFAULT, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, Graphics::color, 1.0f, 0);
 
-            if (scene)
-                RenderSystem::render(scene->registry);
+            if (currentScene)
+                RenderSystem::render(currentScene->registry.get());
 
             if (showDebugUI && isDebug)
                 DebugUI::render();
@@ -164,8 +153,21 @@ namespace MiniEngine
         AudioManager::shutdown();
         Graphics::shutdown();
 
-        delete window;
-
         spdlog::info("Miniengine finished successfully.");
+    }
+
+    void Engine::initializeScene()
+    {
+        spdlog::info("Initializing scene...");
+
+        currentScene->initialize();
+        spdlog::info("Startup components...");
+        ScriptSystem::startup(currentScene->registry.get());
+        RenderSystem::calculate(currentScene->registry.get(),
+                                {static_cast<float>(window->width), static_cast<float>(window->height)});
+        AudioSystem::prepare(currentScene->registry.get());
+
+        spdlog::info("Scene successfully initialized.");
+        isRunning = true;
     }
 } // namespace miniengine

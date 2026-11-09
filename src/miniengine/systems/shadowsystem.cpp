@@ -101,7 +101,8 @@ namespace MiniEngine
         return segments;
     }
 
-    void ShadowSystem::prepare(entt::registry* registry, const entt::entity renderEntity, const ShaderData& shaderData)
+    void ShadowSystem::prepare(entt::registry* registry, const entt::entity renderEntity,
+                               const ShaderData& shaderData)
     {
         std::array<std::array<float, 4>, MAX_SHADOW_SEGMENTS> segments = {};
 

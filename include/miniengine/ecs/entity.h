@@ -6,6 +6,7 @@
 #define MINIENGINE_ENTITY_H
 
 #include "miniaudio.h"
+#include "script.h"
 #include "entt/entt.hpp"
 #include "miniengine/core/resourcemanager.h"
 #include "miniengine/math/vector3.h"
@@ -14,21 +15,6 @@ namespace MiniEngine
 {
     class ResourceManager;
     class Scene;
-    class Entity;
-
-    class IScript
-    {
-    public:
-        virtual ~IScript() = default;
-        virtual void startup() = 0;
-        virtual void update(float dt) = 0;
-
-    protected:
-        friend class Entity;
-
-        Entity* entity = nullptr;
-        ResourceManager* resourceManager = nullptr;
-    };
 
     struct ScriptComponent
     {
@@ -77,21 +63,26 @@ namespace MiniEngine
     {
     public:
         Entity() = default;
+        explicit Entity(entt::entity entity, Scene* scene, entt::registry* registry);
 
         [[nodiscard]] Scene* getScene() const { return p_scene; }
 
-        void addScript(std::unique_ptr<IScript> script)
+        void addScript(std::unique_ptr<IScript> script) const
         {
-            script->entity = this;
+            script->entityHandle = {
+                .id = m_entity,
+                .scene = p_scene,
+                .registry = p_registry
+            };
+
             script->resourceManager = &ResourceManager::get();
+
             auto& [scripts] = getComponent<ScriptComponent>();
-            scripts.emplace_back(
-                std::move(script)
-            );
+            scripts.emplace_back(std::move(script));
         }
 
         template <typename T, typename... Args>
-        T& addComponent(Args&&... args)
+        T& addComponent(Args&&... args) const
         {
             static_assert(!std::is_base_of_v<IScript, T>, "Scripts must be added using addScript()");
             return p_registry->emplace<T>(m_entity, std::forward<Args>(args)...);
@@ -104,7 +95,7 @@ namespace MiniEngine
         }
 
         template <typename T>
-        T& getComponent()
+        [[nodiscard]] T& getComponent() const
         {
             assert(hasComponent<T>() && "Entity does not have that component");
             return p_registry->get<T>(m_entity);
@@ -118,11 +109,10 @@ namespace MiniEngine
 
     private:
         friend class Scene;
-        explicit Entity(entt::entity entity, Scene* scene, entt::registry* registry);
 
         entt::entity m_entity{0};
         Scene* p_scene{};
-        entt::registry* p_registry{};
+        entt::registry* p_registry = nullptr;
     };
 } // MiniEngine
 

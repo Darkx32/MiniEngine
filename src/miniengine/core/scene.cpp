@@ -7,18 +7,20 @@
 
 namespace MiniEngine
 {
-    Scene::Scene() : registry(new entt::registry)
+    Scene::Scene()
     {
+        registry = std::make_unique<entt::registry>();
     }
 
-    Scene::~Scene()
+    void Scene::initialize()
     {
-        delete registry;
     }
 
     Entity Scene::createEntity()
     {
         const entt::entity entity = registry->create();
-        return Entity(entity, this, registry);
+        registry->emplace<Transform>(entity);
+        registry->emplace<ScriptComponent>(entity);
+        return Entity(entity, this, registry.get());
     }
 } // MiniEngine

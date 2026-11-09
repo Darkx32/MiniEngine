@@ -10,7 +10,8 @@
 
 namespace MiniEngine
 {
-    void LightSystem::prepare(entt::registry* registry, const Transform& oTransform, const ShaderData& shaderData)
+    void LightSystem::prepare(entt::registry* registry, const Transform& oTransform,
+                              const ShaderData& shaderData)
     {
         uint16_t index = 0;
         std::array<std::array<float, MAX_LIGHTS>, 4> positions = {};
@@ -126,7 +127,8 @@ namespace MiniEngine
             ambient.data());
     }
 
-    bool LightSystem::circleIntersectsCircle(const Vector3 aPos, float aRadius, const Vector3 bPos, float bRadius)
+    bool LightSystem::circleIntersectsCircle(const Vector3 aPos, const float aRadius, const Vector3 bPos,
+                                             const float bRadius)
     {
         const float dx = bPos.x - aPos.x;
         const float dy = bPos.y - aPos.y;

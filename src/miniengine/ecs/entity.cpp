@@ -39,10 +39,5 @@ namespace MiniEngine
         m_entity = entity;
         p_scene = scene;
         p_registry = registry;
-
-        if (!hasComponent<Transform>())
-            addComponent<Transform>();
-        if (!hasComponent<ScriptComponent>())
-            addComponent<ScriptComponent>();
     }
 } // MiniEngine
