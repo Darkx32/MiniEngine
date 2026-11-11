@@ -1,4 +1,4 @@
-#include "miniengine/Engine.h"
+#include "miniengine/engine.h"
 #include "miniengine/core/graphics.h"
 #include "miniengine/core/scene.h"
 #include "miniengine/ecs/entity.h"
@@ -84,6 +84,9 @@ namespace
     public:
         void startup() override
         {
+            const auto entity = getEntity();
+
+            auto& _ = entity.addComponent<MiniEngine::AudioStreamPlayer>("music.mp3");
         }
 
         void update(float dt) override
@@ -126,25 +129,26 @@ namespace
     class SolarScene : public MiniEngine::Scene
     {
     public:
+        using Scene::Scene;
         ~SolarScene() override = default;
 
         void initialize() override
         {
             Scene::initialize();
 
-            camera = createEntity();
+            const auto camera = createEntity();
             auto& _ = camera.addComponent<MiniEngine::Camera2D>();
 
-            sun = createEntity();
+            const auto sun = createEntity();
             sun.addScript(std::make_unique<SunScript>());
 
-            earth = createEntity();
+            const auto earth = createEntity();
             earth.addScript(std::make_unique<EarthScript>());
 
-            controller = createEntity();
+            const auto controller = createEntity();
             controller.addScript(std::make_unique<ControllerScript>());
 
-            obstacle1 = createEntity();
+            const auto obstacle1 = createEntity();
             auto& resourceManager = MiniEngine::ResourceManager::get();
             auto materialID = resourceManager.create<MiniEngine::Material>();
             obstacle1.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveID(), materialID);
@@ -153,33 +157,23 @@ namespace
             transform1.position = {0.0f, 200, .0f};
             transform1.scale = {200.0f, 50.0f, .0f};
 
-            obstacle2 = createEntity();
+            const auto obstacle2 = createEntity();
             obstacle2.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveID(), materialID);
 
             auto& transform2 = obstacle2.getComponent<MiniEngine::Transform>();
             transform2.position = {0.0f, -200, .0f};
             transform2.scale = {200.0f, 50.0f, .0f};
         }
-
-    private:
-        MiniEngine::Entity camera;
-        MiniEngine::Entity sun;
-        MiniEngine::Entity earth;
-        MiniEngine::Entity controller;
-        MiniEngine::Entity obstacle1;
-        MiniEngine::Entity obstacle2;
     };
 }
 
 int main()
 {
     MiniEngine::Graphics::setClearColor(0x000000FF);
-    MiniEngine::Engine engine;
+    MiniEngine::engine engine;
 
     if (!engine.init("MiniEngine", {1280, 720}))
-    {
         return 1;
-    }
 
     engine.setScene<SolarScene>();
     engine.run();
