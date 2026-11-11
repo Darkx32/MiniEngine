@@ -10,8 +10,8 @@ namespace MiniEngine
 {
     void AudioSystem::prepare(entt::registry* registry)
     {
-        registry->view<AudioStream>().each(
-            [](AudioStream& audioStream)
+        registry->view<AudioStreamPlayer>().each(
+            [](AudioStreamPlayer& audioStream)
             {
                 if (audioStream.autoPlay)
                     audioStream.play();

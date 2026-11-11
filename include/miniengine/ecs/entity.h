@@ -5,7 +5,6 @@
 #ifndef MINIENGINE_ENTITY_H
 #define MINIENGINE_ENTITY_H
 
-#include "miniaudio.h"
 #include "script.h"
 #include "entt/entt.hpp"
 #include "miniengine/core/resourcemanager.h"
@@ -44,16 +43,15 @@ namespace MiniEngine
         }
     };
 
-    struct AudioStream
+    struct AudioStreamPlayer
     {
-        explicit AudioStream(const std::string& filepath);
-        ~AudioStream();
+        explicit AudioStreamPlayer(const std::string& filepath);
 
-        void play();
+        void play() const;
         [[nodiscard]] bool isPlaying() const;
-        void stop();
+        void stop() const;
 
-        ma_sound stream;
+        uint16_t streamID = 0xFFFF;
         std::string filepath;
         std::string group = "master";
         bool autoPlay = false;

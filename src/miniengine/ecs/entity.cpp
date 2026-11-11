@@ -8,30 +8,32 @@
 
 namespace MiniEngine
 {
-    AudioStream::AudioStream(const std::string& filepath) : stream({})
+    AudioStreamPlayer::AudioStreamPlayer(const std::string& filepath)
     {
         this->filepath = filepath;
-        stream = AudioManager::generateSound(filepath, group);
+        streamID = AudioManager::generateSound(filepath, group);
     }
 
-    AudioStream::~AudioStream()
+    void AudioStreamPlayer::play() const
     {
-        AudioManager::deleteSound(&stream);
+        auto* stream = ResourceManager::get().get<AudioStream>(streamID);
+        if (stream->isInitialized)
+            ma_sound_start(&stream->sound);
     }
 
-    void AudioStream::play()
+    bool AudioStreamPlayer::isPlaying() const
     {
-        ma_sound_start(&stream);
+        const auto* stream = ResourceManager::get().get<AudioStream>(streamID);
+        if (stream->isInitialized)
+            return ma_sound_is_playing(&stream->sound);
+        return false;
     }
 
-    bool AudioStream::isPlaying() const
+    void AudioStreamPlayer::stop() const
     {
-        return ma_sound_is_playing(&stream);
-    }
-
-    void AudioStream::stop()
-    {
-        ma_sound_stop(&stream);
+        auto* stream = ResourceManager::get().get<AudioStream>(streamID);
+        if (stream->isInitialized)
+            ma_sound_stop(&stream->sound);
     }
 
     Entity::Entity(const entt::entity entity, Scene* scene, entt::registry* registry)
