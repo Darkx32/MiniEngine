@@ -76,12 +76,12 @@ namespace MiniEngine
 
     struct MeshRenderer
     {
-        explicit MeshRenderer(const uint16_t mesh, const uint16_t material) : meshData(mesh), material(material)
+        explicit MeshRenderer(const uint16_t mesh, const uint16_t material) : meshDataID(mesh), materialID(material)
         {
         }
 
-        const uint16_t meshData = 0xFFFF;
-        const uint16_t material = 0xFFFF;
+        const uint16_t meshDataID = 0xFFFF;
+        const uint16_t materialID = 0xFFFF;
     };
 }
 

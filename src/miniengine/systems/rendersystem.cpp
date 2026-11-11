@@ -46,9 +46,9 @@ namespace MiniEngine
             [&registry](const entt::entity entity, const Transform& transform, const MeshRenderer& mesh)
             {
                 auto& resourceManager = ResourceManager::get();
-                const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshData);
+                const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshDataID);
                 const auto* p_shaderData = resourceManager.get<ShaderData>(p_meshData->shaderData);
-                const auto& p_material = resourceManager.get<Material>(mesh.material);
+                const auto& p_material = resourceManager.get<Material>(mesh.materialID);
 
                 const bgfx::VertexBufferHandle vbh = {p_meshData->vbh_idx};
                 const bgfx::IndexBufferHandle ibh = {p_meshData->ibh_idx};

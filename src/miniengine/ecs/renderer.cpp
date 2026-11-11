@@ -174,8 +174,6 @@ namespace MiniEngine
         if (!bgfx::isValid(vbh) || !bgfx::isValid(ibh))
         {
             spdlog::error("Error to create vertices and indices for quad primitive");
-            vbh_idx = BGFX_INVALID_HANDLE;
-            ibh_idx = BGFX_INVALID_HANDLE;
         }
 
         vbh_idx = vbh.idx;
@@ -235,8 +233,6 @@ namespace MiniEngine
         if (!bgfx::isValid(vbh) || !bgfx::isValid(ibh))
         {
             spdlog::error("Error to create vertices and indices for quad primitive");
-            vbh_idx = BGFX_INVALID_HANDLE;
-            ibh_idx = BGFX_INVALID_HANDLE;
         }
 
         vbh_idx = vbh.idx;
