@@ -34,3 +34,6 @@ vgcore.*
 
 # bgfx tool logs
 bgfx_tool_logs/
+
+# ImGui
+imgui.ini
