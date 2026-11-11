@@ -1,4 +1,4 @@
-#include "miniengine/Engine.h"
+#include "miniengine/engine.h"
 #include <spdlog/spdlog.h>
 
 #include "bgfx/bgfx.h"
@@ -16,17 +16,17 @@
 
 namespace MiniEngine
 {
-    Engine::Engine() : fps(60), isRunning(false), isDebug(false), showDebugUI(false), resourceManager(nullptr),
+    engine::engine() : fps(60), isRunning(false), isDebug(false), showDebugUI(false), resourceManager(nullptr),
                        window(nullptr)
     {
     }
 
-    Engine::~Engine()
+    engine::~engine()
     {
         shutdown();
     }
 
-    bool Engine::init(const std::string& title, const Vector2 size)
+    bool engine::init(const std::string& title, const Vector2 size)
     {
 #ifndef NDEBUG
         spdlog::set_level(spdlog::level::debug);
@@ -76,17 +76,17 @@ namespace MiniEngine
         return true;
     }
 
-    void Engine::setFps(const int newFps)
+    void engine::setFps(const int newFps)
     {
         this->fps = newFps;
     }
 
-    ResourceManager& Engine::getResourceManager() const
+    ResourceManager& engine::getResourceManager() const
     {
         return *this->resourceManager;
     }
 
-    void Engine::run()
+    void engine::run()
     {
         if (currentScene)
             initializeScene();
@@ -144,7 +144,7 @@ namespace MiniEngine
         }
     }
 
-    void Engine::shutdown() const
+    void engine::shutdown() const
     {
         spdlog::info("Miniengine cleanup...");
         DebugUI::shutdown();
@@ -156,7 +156,7 @@ namespace MiniEngine
         spdlog::info("Miniengine finished successfully.");
     }
 
-    void Engine::initializeScene()
+    void engine::initializeScene()
     {
         spdlog::info("Initializing scene...");
 

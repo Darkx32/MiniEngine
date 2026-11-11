@@ -5,7 +5,7 @@
 #include "miniengine/core/graphics.h"
 
 #include "miniengine/core/resourcemanager.h"
-#include "miniengine/Engine.h"
+#include "miniengine/engine.h"
 #include "miniengine/ecs/renderer.h"
 #include "miniengine/pch.h"
 

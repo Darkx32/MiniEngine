@@ -23,7 +23,7 @@ namespace MiniEngine
         [[nodiscard]] int getHeight() const;
 
     private:
-        friend class Engine;
+        friend class engine;
 
         bool init();
         void shutdown();

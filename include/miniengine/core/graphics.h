@@ -9,7 +9,7 @@
 namespace MiniEngine
 {
     class ResourceManager;
-    class Engine;
+    class engine;
 
     class Graphics
     {
@@ -28,7 +28,7 @@ namespace MiniEngine
         static uint16_t getDefaultShaderID();
 
     private:
-        friend class Engine;
+        friend class engine;
 
         struct InitData
         {

@@ -73,7 +73,7 @@ namespace MiniEngine
         [[nodiscard]] static Vector2 getMousePosition();
 
     private:
-        friend class Engine;
+        friend class engine;
         static void update();
         static uint8_t toButtonMask(MouseButton mouseButton);
 

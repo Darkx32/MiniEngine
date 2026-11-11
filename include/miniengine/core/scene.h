@@ -9,10 +9,12 @@
 
 namespace MiniEngine
 {
+    class engine;
+
     class Scene
     {
     public:
-        Scene();
+        explicit Scene(engine* engine);
         virtual ~Scene() = default;
 
         virtual void initialize();
@@ -30,13 +32,16 @@ namespace MiniEngine
             return entities;
         }
 
+        [[nodiscard]] engine* getEngine() const;
+
     protected:
         [[nodiscard]] Entity createEntity();
 
     private:
-        friend class Engine;
+        friend class engine;
         friend class Entity;
         std::unique_ptr<entt::registry> registry;
+        engine* p_engine = nullptr;
     };
 } // MiniEngine
 

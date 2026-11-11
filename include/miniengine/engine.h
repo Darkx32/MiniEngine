@@ -9,11 +9,11 @@ namespace MiniEngine
     class ResourceManager;
     class Scene;
 
-    class Engine
+    class engine
     {
     public:
-        Engine();
-        ~Engine();
+        engine();
+        ~engine();
 
         bool init(const std::string& title, Vector2 size);
         void setFps(int newFps);
@@ -26,7 +26,7 @@ namespace MiniEngine
         {
             static_assert(std::is_base_of_v<Scene, T>, "T has been a scene");
 
-            currentScene = std::make_unique<T>();
+            currentScene = std::make_unique<T>(this);
             if (isRunning)
                 initializeScene();
 

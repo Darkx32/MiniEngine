@@ -4,16 +4,22 @@
 
 #include "miniengine/core/scene.h"
 #include "miniengine/ecs/entity.h"
+#include "miniengine/engine.h"
 
 namespace MiniEngine
 {
-    Scene::Scene()
+    Scene::Scene(engine* engine) : registry(std::make_unique<entt::registry>())
     {
-        registry = std::make_unique<entt::registry>();
+        this->p_engine = engine;
     }
 
     void Scene::initialize()
     {
+    }
+
+    engine* Scene::getEngine() const
+    {
+        return p_engine;
     }
 
     Entity Scene::createEntity()
