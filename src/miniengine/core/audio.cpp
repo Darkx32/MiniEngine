@@ -6,16 +6,18 @@
 
 namespace MiniEngine
 {
-    AudioStream::AudioStream(const ma_sound& s, const bool init)
+    AudioStream::AudioStream(const std::shared_ptr<ma_sound>& s, const bool init)
     {
         sound = s;
         isInitialized = init;
+        filepath = "";
+        groupName = "";
     }
 
     AudioStream::~AudioStream()
     {
         if (isInitialized)
-            AudioManager::deleteSound(&sound);
+            AudioManager::deleteSound(sound.get());
     }
 
     bool AudioManager::initialize()
@@ -87,17 +89,25 @@ namespace MiniEngine
 
     uint16_t AudioManager::generateSound(const std::string& filepath, const std::string& groupName)
     {
-        ma_sound sound;
+        if (!groups.contains(groupName) || !isInitialized) return 0xFFFF;
+
+        auto sound = std::make_unique<ma_sound>();
         const ma_result result = ma_sound_init_from_file(&engine, filepath.c_str(), 0, groups[groupName].get(),
-                                                         nullptr, &sound);
+                                                         nullptr, sound.get());
         if (result != MA_SUCCESS)
         {
             if (result == MA_INVALID_FILE)
                 spdlog::warn("File not found '{}'", filepath);
             spdlog::error("Error to create sound {}", ma_result_description(result));
         }
+        auto& resourceManager = ResourceManager::get();
+        const uint16_t id = resourceManager.create<AudioStream>(std::move(sound), result == MA_SUCCESS);
+        auto* stream = resourceManager.get<AudioStream>(id);
 
-        return ResourceManager::get().create<AudioStream>(sound, result == MA_SUCCESS);
+        stream->filepath = filepath;
+        stream->groupName = groupName;
+
+        return id;
     }
 
     void AudioManager::deleteSound(ma_sound* sound)

@@ -10,11 +10,12 @@
 #include <list>
 #include <memory>
 #include <vector>
-
 #include "spdlog/spdlog.h"
 
 namespace MiniEngine
 {
+    constexpr uint16_t INVALID_ID = 0xFFFF;
+
     struct IResource
     {
         virtual ~IResource() = default;
@@ -129,6 +130,6 @@ namespace MiniEngine
         std::unordered_map<uint16_t, std::list<Entry>::iterator> resources;
         size_t capacity;
     };
-    } // MiniEngine
+} // MiniEngine
 
 #endif //MINIENGINE_RESOURCEMANAGER_H

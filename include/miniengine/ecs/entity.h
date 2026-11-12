@@ -46,14 +46,13 @@ namespace MiniEngine
     struct AudioStreamPlayer
     {
         explicit AudioStreamPlayer(const std::string& filepath);
+        explicit AudioStreamPlayer(const std::string& filepath, const std::string& groupName);
 
         void play() const;
         [[nodiscard]] bool isPlaying() const;
         void stop() const;
 
         uint16_t streamID = 0xFFFF;
-        std::string filepath;
-        std::string group = "master";
         bool autoPlay = false;
     };
 

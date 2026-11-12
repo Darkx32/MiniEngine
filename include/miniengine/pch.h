@@ -11,6 +11,7 @@
 #include <type_traits>
 #include <cstdint>
 #include <numbers>
+#include <list>
 
 #include "spdlog/spdlog.h"
 #include <entt/entt.hpp>

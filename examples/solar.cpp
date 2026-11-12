@@ -86,7 +86,9 @@ namespace
         {
             const auto entity = getEntity();
 
-            auto& _ = entity.addComponent<MiniEngine::AudioStreamPlayer>("music.mp3");
+            const auto& player = entity.addComponent<MiniEngine::AudioStreamPlayer>("music.mp3");
+
+            player.play();
         }
 
         void update(float dt) override

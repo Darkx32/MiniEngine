@@ -45,6 +45,9 @@ namespace MiniEngine
         registry->view<const Transform, const MeshRenderer>().each(
             [&registry](const entt::entity entity, const Transform& transform, const MeshRenderer& mesh)
             {
+                assert(mesh.meshDataID != INVALID_ID && "MeshDataID is not valid");
+                assert(mesh.materialID != INVALID_ID && "MaterialID is not valid");
+
                 auto& resourceManager = ResourceManager::get();
                 const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshDataID);
                 const auto* p_shaderData = resourceManager.get<ShaderData>(p_meshData->shaderData);

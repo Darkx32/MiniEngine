@@ -10,30 +10,34 @@ namespace MiniEngine
 {
     AudioStreamPlayer::AudioStreamPlayer(const std::string& filepath)
     {
-        this->filepath = filepath;
-        streamID = AudioManager::generateSound(filepath, group);
+        streamID = AudioManager::generateSound(filepath);
+    }
+
+    AudioStreamPlayer::AudioStreamPlayer(const std::string& filepath, const std::string& groupName)
+    {
+        streamID = AudioManager::generateSound(filepath, groupName);
     }
 
     void AudioStreamPlayer::play() const
     {
-        auto* stream = ResourceManager::get().get<AudioStream>(streamID);
-        if (stream->isInitialized)
-            ma_sound_start(&stream->sound);
+        assert(streamID != INVALID_ID && "Stream is not valid");
+        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamID); stream->isInitialized)
+            ma_sound_start(stream->sound.get());
     }
 
     bool AudioStreamPlayer::isPlaying() const
     {
-        const auto* stream = ResourceManager::get().get<AudioStream>(streamID);
-        if (stream->isInitialized)
-            return ma_sound_is_playing(&stream->sound);
+        assert(streamID != INVALID_ID && "Stream is not valid");
+        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamID); stream->isInitialized)
+            return ma_sound_is_playing(stream->sound.get());
         return false;
     }
 
     void AudioStreamPlayer::stop() const
     {
-        auto* stream = ResourceManager::get().get<AudioStream>(streamID);
-        if (stream->isInitialized)
-            ma_sound_stop(&stream->sound);
+        assert(streamID != INVALID_ID && "Stream is not valid");
+        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamID); stream->isInitialized)
+            ma_sound_stop(stream->sound.get());
     }
 
     Entity::Entity(const entt::entity entity, Scene* scene, entt::registry* registry)

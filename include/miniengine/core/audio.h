@@ -10,12 +10,14 @@ namespace MiniEngine
 {
     struct AudioStream : IResource
     {
-        explicit AudioStream(const ma_sound& s, bool init);
+        explicit AudioStream(const std::shared_ptr<ma_sound>& s, bool init);
 
         ~AudioStream() override;
 
-        ma_sound sound{};
+        std::shared_ptr<ma_sound> sound;
         bool isInitialized;
+        std::string filepath;
+        std::string groupName;
     };
 
     class AudioManager
