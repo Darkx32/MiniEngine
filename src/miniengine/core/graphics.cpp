@@ -89,23 +89,23 @@ namespace MiniEngine
 
     static MiniEngineBGFXCallback bgfx_callback;
 
-    static uint16_t s_quadPrimitiveID = 0xFFFF;
-    static uint16_t s_circlePrimitiveID = 0xFFFF;
-    static uint16_t s_defaultShaderID = 0xFFFF;
+    static ResourceHandle s_quadPrimitiveHandle = {};
+    static ResourceHandle s_circlePrimitiveHandle = {};
+    static ResourceHandle s_defaultShaderHandle = {};
 
-    uint16_t Graphics::getQuadPrimitiveID()
+    ResourceHandle Graphics::getQuadPrimitiveHandle()
     {
-        return s_quadPrimitiveID;
+        return s_quadPrimitiveHandle;
     }
 
-    uint16_t Graphics::getCirclePrimitiveID()
+    ResourceHandle Graphics::getCirclePrimitiveHandle()
     {
-        return s_circlePrimitiveID;
+        return s_circlePrimitiveHandle;
     }
 
-    uint16_t Graphics::getDefaultShaderID()
+    ResourceHandle Graphics::getDefaultShaderHandle()
     {
-        return s_defaultShaderID;
+        return s_defaultShaderHandle;
     }
 
     void Graphics::setClearColor(const uint32_t newColor)
@@ -135,9 +135,9 @@ namespace MiniEngine
         bgfx::setViewRect(DEFAULT, 0, 0, static_cast<uint16_t>(initData.width), static_cast<uint16_t>(initData.height));
 
         rendererComponentInit();
-        s_defaultShaderID = initData.resourceManager->create<ShaderData>();
-        s_quadPrimitiveID = initData.resourceManager->create<QuadPrimitive>();
-        s_circlePrimitiveID = initData.resourceManager->create<CirclePrimitive>();
+        s_defaultShaderHandle = initData.resourceManager->create<ShaderData>();
+        s_quadPrimitiveHandle = initData.resourceManager->create<QuadPrimitive>();
+        s_circlePrimitiveHandle = initData.resourceManager->create<CirclePrimitive>();
 
         return true;
     }

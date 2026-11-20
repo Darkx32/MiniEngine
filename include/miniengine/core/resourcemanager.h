@@ -4,21 +4,27 @@
 
 #ifndef MINIENGINE_RESOURCEMANAGER_H
 #define MINIENGINE_RESOURCEMANAGER_H
-#include <unordered_map>
 #include <concepts>
-#include <limits>
-#include <list>
 #include <memory>
 #include <vector>
 #include "spdlog/spdlog.h"
 
 namespace MiniEngine
 {
-    constexpr uint16_t INVALID_ID = 0xFFFF;
-
     struct IResource
     {
         virtual ~IResource() = default;
+    };
+
+    struct ResourceHandle
+    {
+        uint32_t index = 0;
+        uint32_t generation = 0;
+
+        [[nodiscard]] constexpr bool isValid() const noexcept { return generation != 0; }
+        constexpr explicit operator bool() const noexcept { return isValid(); }
+
+        auto operator<=>(const ResourceHandle&) const = default;
     };
 
     template <typename T>
@@ -27,108 +33,122 @@ namespace MiniEngine
     class ResourceManager
     {
     public:
-        static constexpr size_t MAX_CAPACITY = std::numeric_limits<uint16_t>::max();
-
-        explicit ResourceManager() : capacity(MAX_CAPACITY)
+        ResourceManager()
         {
-            freeIds.reserve(capacity);
-            for (size_t i = capacity; i >= 1; --i)
-            {
-                freeIds.push_back(i);
-            }
-
             p_resource = this;
         }
 
-        ~ResourceManager()
-        {
-            clean();
-        }
+        ~ResourceManager() = default;
 
         template <Resource T, typename... Args>
-        uint16_t create(Args&&... args)
+        ResourceHandle create(Args&&... args)
         {
-            if (order.size() >= capacity)
+            auto resource = std::make_unique<T>(std::forward<Args>(args)...);
+            uint16_t index;
+
+            if (!freeIds.empty())
             {
-                evictOldest();
+                index = freeIds.back();
+                freeIds.pop_back();
+                slots[index].data = std::move(resource);
+            }
+            else
+            {
+                index = static_cast<uint32_t>(slots.size());
+                slots.push_back(Slot{
+                    .data = std::move(resource),
+                    .generation = 1
+                });
             }
 
-            const uint16_t id = freeIds.back();
-            freeIds.pop_back();
-
-            auto res = std::make_unique<T>(std::forward<Args>(args)...);
-
-            order.push_front({.id = id, .resource = std::move(res)});
-            resources[id] = order.begin();
-
-            return id;
+            return {.index = index, .generation = slots[index].generation};
         }
 
         template <Resource T>
-        T* get(const uint16_t id)
+        T* get(const ResourceHandle handle)
         {
-            const auto it = resources.find(id);
-            if (it == resources.end()) return nullptr;
-
-            order.splice(order.begin(), order, it->second);
-            auto* resource = dynamic_cast<T*>(it->second->resource.get());
-
+            if (!isValid(handle)) return nullptr;
+            auto* resource = dynamic_cast<T*>(slots[handle.index].data.get());
             if (!resource)
             {
-                spdlog::error("Resource {} exists, but requested type is wrong", id);
+                spdlog::error("Resource {} exists, but requested type is wrong", handle.index);
             }
-
             return resource;
         }
 
-        bool destroy(const uint16_t id)
+        template <Resource T>
+        const T* get(const ResourceHandle handle) const
         {
-            const auto it = resources.find(id);
-            if (it == resources.end()) return false;
+            if (!isValid(handle)) return nullptr;
+            const auto* resource = dynamic_cast<const T*>(slots[handle.index].data.get());
+            if (!resource)
+            {
+                spdlog::error("Resource {} exists, but requested type is wrong", handle.index);
+            }
+            return resource;
+        }
 
-            order.erase(it->second);
-            resources.erase(it);
-            freeIds.push_back(id);
+        bool destroy(const ResourceHandle handle)
+        {
+            if (!isValid(handle)) return false;
+
+            auto& [data, generation] = slots[handle.index];
+            data.reset();
+
+            generation++;
+            if (generation == 0) generation = 1;
+
+            freeIds.push_back(handle.index);
             return true;
         }
 
-        void clean()
+        [[nodiscard]] bool isValid(const ResourceHandle handle) const noexcept
         {
-            order.clear();
-            resources.clear();
+            if (!handle.isValid() || handle.index >= slots.size()) return false;
+            const auto& [data, generation] = slots[handle.index];
+            return data != nullptr && generation == handle.generation;
+        }
 
-            freeIds.clear();
-            freeIds.reserve(capacity);
-            for (size_t i = capacity; i >= 1; --i)
+        static void assertValid(const ResourceHandle handle)
+        {
+            const auto& resourceManager = get();
+            const bool valid = resourceManager.isValid(handle);
+            if (!valid)
             {
-                freeIds.push_back(static_cast<uint16_t>(i));
+                spdlog::warn("Value with id {} is not valid.", handle.index);
+            }
+            assert(valid && "Value doesn't valid.");
+        }
+
+        void clear()
+        {
+            for (uint32_t i = 0; i < static_cast<uint32_t>(slots.size()); ++i)
+            {
+                if (slots[i].data)
+                {
+                    slots[i].data.reset();
+                    slots[i].generation++;
+                    if (slots[i].generation == 0) slots[i].generation = 1;
+                    freeIds.push_back(i);
+                }
             }
         }
 
-        size_t size() const { return order.size(); }
+        [[nodiscard]] size_t size() const { return slots.size(); }
+
         static ResourceManager& get();
 
     private:
-        struct Entry
+        struct Slot
         {
-            uint16_t id;
-            std::unique_ptr<IResource> resource;
+            std::unique_ptr<IResource> data;
+            uint32_t generation = 0;
         };
-
-        void evictOldest()
-        {
-            const uint16_t oldestId = order.back().id;
-            order.pop_back();
-            resources.erase(oldestId);
-            freeIds.push_back(oldestId);
-        }
 
         static ResourceManager* p_resource;
 
-        std::vector<uint16_t> freeIds;
-        std::list<Entry> order;
-        std::unordered_map<uint16_t, std::list<Entry>::iterator> resources;
-        size_t capacity;
+        std::vector<Slot> slots;
+        std::vector<uint32_t> freeIds;
     };
 } // MiniEngine
 

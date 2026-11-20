@@ -37,7 +37,7 @@ namespace MiniEngine
         uint16_t vbh_idx = 0xFFFF;
         uint16_t ibh_idx = 0xFFFF;
 
-        uint16_t shaderData = 0xFFFF;
+        ResourceHandle shaderData = {};
     };
 
     struct Material : IResource
@@ -76,12 +76,13 @@ namespace MiniEngine
 
     struct MeshRenderer
     {
-        explicit MeshRenderer(const uint16_t mesh, const uint16_t material) : meshDataID(mesh), materialID(material)
+        explicit MeshRenderer(const ResourceHandle mesh, const ResourceHandle material) : meshDataHandle(mesh),
+            materialHandle(material)
         {
         }
 
-        const uint16_t meshDataID = 0xFFFF;
-        const uint16_t materialID = 0xFFFF;
+        const ResourceHandle meshDataHandle = {};
+        const ResourceHandle materialHandle = {};
     };
 }
 

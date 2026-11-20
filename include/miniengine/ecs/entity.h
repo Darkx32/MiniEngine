@@ -52,7 +52,7 @@ namespace MiniEngine
         [[nodiscard]] bool isPlaying() const;
         void stop() const;
 
-        uint16_t streamID = 0xFFFF;
+        ResourceHandle streamHandle = {};
         bool autoPlay = false;
     };
 

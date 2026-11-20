@@ -10,33 +10,33 @@ namespace MiniEngine
 {
     AudioStreamPlayer::AudioStreamPlayer(const std::string& filepath)
     {
-        streamID = AudioManager::generateSound(filepath);
+        streamHandle = AudioManager::generateSound(filepath);
     }
 
     AudioStreamPlayer::AudioStreamPlayer(const std::string& filepath, const std::string& groupName)
     {
-        streamID = AudioManager::generateSound(filepath, groupName);
+        streamHandle = AudioManager::generateSound(filepath, groupName);
     }
 
     void AudioStreamPlayer::play() const
     {
-        assert(streamID != INVALID_ID && "Stream is not valid");
-        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamID); stream->isInitialized)
+        ResourceManager::assertValid(streamHandle);
+        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamHandle); stream->isInitialized)
             ma_sound_start(stream->sound.get());
     }
 
     bool AudioStreamPlayer::isPlaying() const
     {
-        assert(streamID != INVALID_ID && "Stream is not valid");
-        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamID); stream->isInitialized)
+        ResourceManager::assertValid(streamHandle);
+        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamHandle); stream->isInitialized)
             return ma_sound_is_playing(stream->sound.get());
         return false;
     }
 
     void AudioStreamPlayer::stop() const
     {
-        assert(streamID != INVALID_ID && "Stream is not valid");
-        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamID); stream->isInitialized)
+        ResourceManager::assertValid(streamHandle);
+        if (const auto* stream = ResourceManager::get().get<AudioStream>(streamHandle); stream->isInitialized)
             ma_sound_stop(stream->sound.get());
     }
 

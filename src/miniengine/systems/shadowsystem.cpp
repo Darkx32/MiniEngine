@@ -74,10 +74,10 @@ namespace MiniEngine
         for (int i = 0; i < SEGMENTS; ++i)
         {
             const float angle1 =
-                (2.0f * std::numbers::pi_v<float> * static_cast<float>(i)) / SEGMENTS;
+                2.0f * std::numbers::pi_v<float> * static_cast<float>(i) / SEGMENTS;
 
             const float angle2 =
-                (2.0f * std::numbers::pi_v<float> * static_cast<float>(i + 1)) / SEGMENTS;
+                2.0f * std::numbers::pi_v<float> * static_cast<float>(i + 1) / SEGMENTS;
 
             Vector2 start = {
                 std::cos(angle1) + shadow.offset.x,

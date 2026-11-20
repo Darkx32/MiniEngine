@@ -123,7 +123,7 @@ namespace MiniEngine
                 const float radius = transform.scale.x / 2.f;
                 const float halfHeight = (transform.scale.y - 2.0f * radius) / 2.0f;
 
-                b2Capsule capsule{};
+                b2Capsule capsule;
                 capsule.center1 = {.x = 0.0f, .y = -halfHeight};
                 capsule.center2 = {.x = 0.0f, .y = halfHeight};
                 capsule.radius = radius;

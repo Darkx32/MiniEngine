@@ -30,7 +30,7 @@ namespace MiniEngine
         static void createGroup(const std::string& groupName);
         static void deleteGroup(const std::string& groupName);
 
-        static uint16_t generateSound(const std::string& filepath, const std::string& groupName = "master");
+        static ResourceHandle generateSound(const std::string& filepath, const std::string& groupName = "master");
         static void deleteSound(ma_sound* sound);
 
     private:

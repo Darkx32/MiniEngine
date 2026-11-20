@@ -87,9 +87,9 @@ namespace MiniEngine
         groups.erase(groupName);
     }
 
-    uint16_t AudioManager::generateSound(const std::string& filepath, const std::string& groupName)
+    ResourceHandle AudioManager::generateSound(const std::string& filepath, const std::string& groupName)
     {
-        if (!groups.contains(groupName) || !isInitialized) return 0xFFFF;
+        if (!groups.contains(groupName) || !isInitialized) return {};
 
         auto sound = std::make_unique<ma_sound>();
         const ma_result result = ma_sound_init_from_file(&engine, filepath.c_str(), 0, groups[groupName].get(),
@@ -101,13 +101,13 @@ namespace MiniEngine
             spdlog::error("Error to create sound {}", ma_result_description(result));
         }
         auto& resourceManager = ResourceManager::get();
-        const uint16_t id = resourceManager.create<AudioStream>(std::move(sound), result == MA_SUCCESS);
-        auto* stream = resourceManager.get<AudioStream>(id);
+        const ResourceHandle handle = resourceManager.create<AudioStream>(std::move(sound), result == MA_SUCCESS);
+        auto* stream = resourceManager.get<AudioStream>(handle);
 
         stream->filepath = filepath;
         stream->groupName = groupName;
 
-        return id;
+        return handle;
     }
 
     void AudioManager::deleteSound(ma_sound* sound)

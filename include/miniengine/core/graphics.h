@@ -6,6 +6,8 @@
 #define MINIENGINE_GRAPHICS_H
 #include <cstdint>
 
+#include "resourcemanager.h"
+
 namespace MiniEngine
 {
     class ResourceManager;
@@ -23,9 +25,9 @@ namespace MiniEngine
 
         static void setClearColor(uint32_t newColor);
 
-        static uint16_t getQuadPrimitiveID();
-        static uint16_t getCirclePrimitiveID();
-        static uint16_t getDefaultShaderID();
+        static ResourceHandle getQuadPrimitiveHandle();
+        static ResourceHandle getCirclePrimitiveHandle();
+        static ResourceHandle getDefaultShaderHandle();
 
     private:
         friend class engine;

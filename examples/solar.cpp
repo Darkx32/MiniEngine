@@ -22,7 +22,7 @@ namespace
             auto& transform = entity.getComponent<MiniEngine::Transform>();
             transform.scale.x = transform.scale.y = 50;
 
-            entity.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getCirclePrimitiveID(),
+            entity.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getCirclePrimitiveHandle(),
                                                           materialID);
             auto& _ = entity.addComponent<MiniEngine::PointLight2D>();
             auto& rb = entity.addComponent<MiniEngine::RigidBody>(transform);
@@ -39,7 +39,7 @@ namespace
         }
 
     private:
-        uint16_t materialID = 0xFFFF;
+        MiniEngine::ResourceHandle materialID = {};
     };
 
     class EarthScript : public MiniEngine::IScript
@@ -57,7 +57,7 @@ namespace
             transform.position = {-150.f, 0.0f, .0f};
             transform.scale.x = transform.scale.y = 5;
 
-            entity.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getCirclePrimitiveID(),
+            entity.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getCirclePrimitiveHandle(),
                                                           materialID);
             auto& shadow = entity.addComponent<MiniEngine::Shadow2D>();
             shadow.shape = MiniEngine::ShadowShape2D::Circle;
@@ -76,7 +76,7 @@ namespace
         }
 
     private:
-        uint16_t materialID = 0xFFFF;
+        MiniEngine::ResourceHandle materialID = {};
     };
 
     class ControllerScript : public MiniEngine::IScript
@@ -153,14 +153,16 @@ namespace
             const auto obstacle1 = createEntity();
             auto& resourceManager = MiniEngine::ResourceManager::get();
             auto materialID = resourceManager.create<MiniEngine::Material>();
-            obstacle1.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveID(), materialID);
+            obstacle1.addComponent<
+                MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveHandle(), materialID);
 
             auto& transform1 = obstacle1.getComponent<MiniEngine::Transform>();
             transform1.position = {0.0f, 200, .0f};
             transform1.scale = {200.0f, 50.0f, .0f};
 
             const auto obstacle2 = createEntity();
-            obstacle2.addComponent<MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveID(), materialID);
+            obstacle2.addComponent<
+                MiniEngine::MeshRenderer>(MiniEngine::Graphics::getQuadPrimitiveHandle(), materialID);
 
             auto& transform2 = obstacle2.getComponent<MiniEngine::Transform>();
             transform2.position = {0.0f, -200, .0f};

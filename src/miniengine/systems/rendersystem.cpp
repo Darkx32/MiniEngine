@@ -45,13 +45,13 @@ namespace MiniEngine
         registry->view<const Transform, const MeshRenderer>().each(
             [&registry](const entt::entity entity, const Transform& transform, const MeshRenderer& mesh)
             {
-                assert(mesh.meshDataID != INVALID_ID && "MeshDataID is not valid");
-                assert(mesh.materialID != INVALID_ID && "MaterialID is not valid");
+                ResourceManager::assertValid(mesh.meshDataHandle);
+                ResourceManager::assertValid(mesh.materialHandle);
 
                 auto& resourceManager = ResourceManager::get();
-                const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshDataID);
+                const auto* p_meshData = resourceManager.get<MeshData>(mesh.meshDataHandle);
                 const auto* p_shaderData = resourceManager.get<ShaderData>(p_meshData->shaderData);
-                const auto& p_material = resourceManager.get<Material>(mesh.materialID);
+                const auto& p_material = resourceManager.get<Material>(mesh.materialHandle);
 
                 const bgfx::VertexBufferHandle vbh = {p_meshData->vbh_idx};
                 const bgfx::IndexBufferHandle ibh = {p_meshData->ibh_idx};

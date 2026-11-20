@@ -147,8 +147,8 @@ namespace MiniEngine
     void engine::shutdown() const
     {
         spdlog::info("Miniengine cleanup...");
+        resourceManager->clear();
         DebugUI::shutdown();
-        resourceManager->clean();
         PhysicsSystem::shutdown();
         AudioManager::shutdown();
         Graphics::shutdown();
